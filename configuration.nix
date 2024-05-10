@@ -113,6 +113,7 @@
 	spotify
 	vscode
 	todoist-electron
+	jellyfin-media-player
 
 	#vivaldi
     ];
