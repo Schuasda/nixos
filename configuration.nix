@@ -112,12 +112,9 @@
 	spotify
 	vscode
 	todoist-electron
-<<<<<<< HEAD
 	jetbrains.webstorm
 	dbeaver
-=======
 	jellyfin-media-player
->>>>>>> refs/remotes/origin/main
 
 	#vivaldi
     ];
