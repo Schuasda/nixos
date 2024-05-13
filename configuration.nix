@@ -9,7 +9,7 @@
 
   imports =
     [ # Include the results of the hardware scan.
-      <nixos-hardware/framework/16-inch/cpu/7040-amd>
+      <nixos-hardware/framework/16-inch/7040-amd>
       ./hardware-configuration.nix
     ];
 
@@ -56,10 +56,9 @@
   services.xserver.enable = true;
   
   # Enable the Pantheon Desktop Environment.
-  services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.displayManager.lightdm.greeters.pantheon.enable = false;
-  services.xserver.displayManager.lightdm.greeters.gtk.enable = true;
-  services.xserver.desktopManager.pantheon.enable = true;
+  services.xserver.displayManager.sddm.enable = true;
+  services.xserver.desktopManager.plasma5.enable = true;
+
 
   # Enable fingerprint reader
   services.fprintd.enable = true;
@@ -86,7 +85,7 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
+    jack.enable = true;
 
     # use the example session manager (no others are packaged yet so this is enabled by default,
     # no need to redefine it in your config for now)
@@ -113,6 +112,8 @@
 	spotify
 	vscode
 	todoist-electron
+	jetbrains.webstorm
+	dbeaver
 
 	#vivaldi
     ];
@@ -135,6 +136,8 @@
 	fprintd
 	nix-update
 	gparted
+	gh
+	libsForQt5.konqueror
   ];
 
   programs.steam = {
