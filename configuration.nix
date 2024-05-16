@@ -31,6 +31,10 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  # Enable bluetooth
+  hardware.bluetooth.enable = true; # enables support for Bluetooth
+  hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
+
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
 
@@ -115,6 +119,12 @@
 	jetbrains.webstorm
 	dbeaver
 	jellyfin-media-player
+	xautomation
+	xbindkeys
+	nodejs_21
+	just
+	ungit
+	insomnia
 
 	#vivaldi
     ];
