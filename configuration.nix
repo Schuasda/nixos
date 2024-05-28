@@ -125,6 +125,7 @@
 	just
 	ungit
 	insomnia
+	betterbird
 
 	#vivaldi
     ];
