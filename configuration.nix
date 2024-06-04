@@ -61,9 +61,9 @@
   # Enable the X11 windowing system.
   services.xserver.enable = true;
   
-  # Enable the Pantheon Desktop Environment.
+  # Enable the Plasma Desktop Environment.
   services.xserver.displayManager.sddm.enable = true;
-  services.xserver.desktopManager.plasma5.enable = true;
+  services.xserver.desktopManager.plasma6.enable = true;
 
 
   # Enable fingerprint reader
@@ -119,11 +119,11 @@
 	vscode
 	todoist-electron
 	jetbrains.webstorm
-	dbeaver
+	dbeaver-bin
 	jellyfin-media-player
 	xautomation
 	xbindkeys
-	nodejs_21
+	nodejs_22
 	just
 	ungit
 	insomnia
