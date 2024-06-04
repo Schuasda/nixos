@@ -17,6 +17,8 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  services.logrotate.checkConfig = false;
+
   # Enable garbage collection in the NixStore
   nix.gc.automatic = true;
   nix.gc.dates = "16:00";
@@ -126,6 +128,7 @@
 	ungit
 	insomnia
 	betterbird
+	ausweisapp
 
 	#vivaldi
     ];
