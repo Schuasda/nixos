@@ -60,26 +60,35 @@
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
+  services.displayManager.defaultSession = "plasmax11";
+
+#  services.displayManager.sddm.wayland.enable = true;
   
   # Enable the Plasma Desktop Environment.
-  services.xserver.displayManager.sddm.enable = true;
-  services.xserver.desktopManager.plasma6.enable = true;
+  services.displayManager.sddm.enable = true;
+  services.desktopManager.plasma6.enable = true;
 
 
   # Enable fingerprint reader
   services.fprintd.enable = true;
     
   # Configure keymap in X11
-  services.xserver = {
+  services.xserver.xkb = {
     layout = "de";
-    xkbVariant = "";
+    variant = "";
   };
 
-  # Configure console keymap
+  # Configure console keymap0
   console.keyMap = "de";
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+  services.avahi = {
+	enable = true;
+  	nssmdns4 = true;
+  	openFirewall = true;
+  };
+
 
   # Enable sound with pipewire.
   sound.enable = true;
@@ -116,7 +125,7 @@
 	zulip
 	discord
 	spotify
-	vscode
+	vscode.fhs
 	todoist-electron
 	jetbrains.webstorm
 	dbeaver-bin
@@ -126,42 +135,55 @@
 	nodejs_22
 	just
 	ungit
+	gittyup
 	insomnia
-	betterbird
-	ausweisapp
 
 	#vivaldi
     ];
   };
 
   # Enable automatic login for the user.
-  services.xserver.displayManager.autoLogin.enable = true;
-  services.xserver.displayManager.autoLogin.user = "schuasda";
+  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.user = "schuasda";
+
+
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  	#nix-software-center
-	neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+	neovim
 	wget
-	firefox
-	thunderbird
+	gnome.cheese
+	betterbird
 	git
-	libgcc
+	#libgcc
+	gcc
+	gdb
 	fprintd
 	nix-update
 	gparted
 	gh
-	libsForQt5.konqueror
   ];
 
+  # Enable firefox
+  programs.firefox.enable = true;
+
+  # Enable and configure Steam
   programs.steam = {
   	enable = true;
   	remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
   	dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   };
 
-    
+  # Enable Ausweisapp and open firewall
+  programs.ausweisapp = {
+	enable = true;
+	openFirewall = true;
+  };
+
+  # Enable KDE Connect
+  programs.kdeconnect.enable = true;
+
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -181,6 +203,15 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
+  networking.firewall = { 
+    enable = true;
+    allowedTCPPortRanges = [ 
+      { from = 1714; to = 1764; } # KDE Connect
+    ];  
+    allowedUDPPortRanges = [ 
+      { from = 1714; to = 1764; } # KDE Connect
+    ];  
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
