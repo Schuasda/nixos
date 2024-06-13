@@ -139,6 +139,11 @@
 	ungit
 	gittyup
 	insomnia
+	texliveFull
+	libreoffice-qt
+    	hunspell
+    	hunspellDicts.de_DE
+    	hunspellDicts.en_US-large
 
 	#vivaldi
     ];
