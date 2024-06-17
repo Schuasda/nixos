@@ -141,9 +141,13 @@
 	insomnia
 	texliveFull
 	libreoffice-qt
-    	hunspell
-    	hunspellDicts.de_DE
-    	hunspellDicts.en_US-large
+		hunspell
+		hunspellDicts.de_DE
+		hunspellDicts.en_US-large
+	temurin-jre-bin
+	syncthing
+	zoxide
+	fish
 
 	#vivaldi
     ];
