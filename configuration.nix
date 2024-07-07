@@ -2,7 +2,11 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ 
+  config, 
+  pkgs ? import <nixpkgs> {},
+  ... 
+}:
 
 {
   nix.settings.experimental-features = [ "nix-command" ];
@@ -21,9 +25,15 @@
 
   services.logrotate.checkConfig = false;
 
+  # Enable auto upgrade
+  system.autoUpgrade.enable = true;
+
   # Enable garbage collection in the NixStore
-  nix.gc.automatic = true;
-  nix.gc.dates = "16:00";
+  nix.gc = {
+  	automatic = true;
+  	dates = "16:00";
+	options = "--delete-older-than 7d";
+  };
 
   networking.hostName = "SchuasdaNix"; # Define your hostname.
 #  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -57,6 +67,7 @@
     LC_TIME = "de_DE.UTF-8";
   };
 
+
   # Enable Firmware Update through fwupd
   services.fwupd.enable = true;
 
@@ -76,6 +87,7 @@
     
   # Configure keymap in X11
   services.xserver.xkb = {
+
     layout = "de";
     variant = "";
   };
@@ -109,6 +121,44 @@
     #media-session.enable = true;
   };
 
+  # Enable Mopidy msuic server
+  services.mopidy = {
+	enable = true;
+	extensionPackages = with pkgs; [
+		mopidy-local
+		mopidy-iris
+		mopidy-spotify
+		mopidy-soundcloud
+	];
+	configuration = ''
+		[file]
+		enabled = true
+		media_dirs =
+		    home/schuasda/Music/ |Music
+		show_dotfiles = false
+		excluded_file_extensions =
+		  .directory
+		  .html
+		  .jpeg
+		  .jpg
+		  .log
+		  .nfo
+		  .pdf
+		  .png
+		  .txt
+		  .zip
+		follow_symlinks = false
+		metadata_timeout = 1000
+
+		[spotify]
+		username = simon@fonto.de	
+		password = 
+		client_id = 9961d79b-c6e6-49c7-80fd-e0276a840b37
+		client_secret = O7_T_Fi4N53HAm2Q1hFrLBSo5-alIz7UOSchiM8QswA=
+	'';
+  };
+
+
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
@@ -123,11 +173,12 @@
     packages = with pkgs; [
 	keepassxc
 	signal-desktop
+
 	whatsapp-for-linux
 	zulip
 	discord
 	spotify
-	vscode.fhs
+	vscode-fhs
 	todoist-electron
 	jetbrains.webstorm
 	dbeaver-bin
@@ -140,23 +191,33 @@
 	gittyup
 	insomnia
 	texliveFull
+
 	libreoffice-qt
 		hunspell
 		hunspellDicts.de_DE
 		hunspellDicts.en_US-large
+		hunspellDicts.en-gb-large
+
+	zotero
+		
 	temurin-jre-bin
+	kdePackages.poppler
 	syncthing
 	zoxide
 	fish
+	vlc
+	obs-studio
+	ungoogled-chromium
+	openfortivpn
+	qalculate-qt
 
 	#vivaldi
     ];
   };
 
-  # Enable automatic login for the user.
-  services.displayManager.autoLogin.enable = true;
+  # Disable automatic login for the user.
+  services.displayManager.autoLogin.enable = false;
   services.displayManager.autoLogin.user = "schuasda";
-
 
 
   # List packages installed in system profile. To search, run:
@@ -165,7 +226,7 @@
 	neovim
 	wget
 	gnome.cheese
-	betterbird
+	thunderbird
 	git
 	gcc
 	gdb
@@ -173,7 +234,28 @@
 	nix-update
 	gparted
 	gh
+	touchegg
   ];
+
+
+  # Prevent wake up in backpack
+  services.udev.extraRules = ''
+  	ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTRS{idVendor}=="32ac", ATTRS{idProduct}=="0018", ATTR{power/wakeup}="disabled", ATTR{driver/1-1.1.1.4/power/wakeup}="disabled"
+  	ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTRS{idVendor}=="32ac", ATTRS{idProduct}=="0014", ATTR{power/wakeup}="disabled", ATTR{driver/1-1.1.1.4/power/wakeup}="disabled"
+  '';
+
+
+  # Configure other environment parameters
+  environment.etc = {
+  	# touchpad palm rejection
+	"libinput/local-overrides.quirks".text = ''
+	  [Keyboard]
+	  MatchUdevType=keyboard
+	  MatchName=Framework Laptop 16 Keyboard Module - ANSI Keyboard
+	  AttrKeyboardIntegration=internal
+	'';
+  };
+
 
   # Enable firefox
   programs.firefox.enable = true;
@@ -204,6 +286,9 @@
   # };
 
   # List services that you want to enable:
+
+  # Enable power-profiles-daemon
+  services.power-profiles-daemon.enable = true;
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
