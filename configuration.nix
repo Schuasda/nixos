@@ -8,7 +8,9 @@
   ... 
 }:
 
-{
+let
+    unstable = import <unstable> { config = { allowUnfree = true; }; };
+in {
   nix.settings.experimental-features = [ "nix-command" ];
 
   imports =
@@ -18,8 +20,34 @@
     ];
 
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader = {
+    efi = {
+      canTouchEfiVariables = true;
+      # assuming /boot is the mount point of the  EFI partition in NixOS (as the installation section recommends).
+      efiSysMountPoint = "/boot";
+    };
+    grub = {
+      # despite what the configuration.nix manpage seems to indicate,
+      # as of release 17.09, setting device to "nodev" will still call
+      # `grub-install` if efiSupport is true
+      # (the devices list is not used by the EFI grub install,
+      # but must be set to some value in order to pass an assert in grub.nix)
+      devices = [ "nodev" ];
+      efiSupport = true;
+      enable = true;
+      # set $FS_UUID to the UUID of the EFI partition
+      extraEntries = ''
+        menuentry "Windows" {
+          insmod part_gpt
+          insmod fat
+          insmod search_fs_uuid
+          insmod chain
+          search --fs-uuid --set=root $FS_UUID
+          chainloader /EFI/Microsoft/Boot/bootmgfw.efi
+        }
+      '';
+    };
+  };
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
 
@@ -33,6 +61,28 @@
   	automatic = true;
   	dates = "16:00";
 	options = "--delete-older-than 7d";
+  };
+
+  # Systemd-timers
+  systemd.timers."downloads-cleanup" = {
+	  wantedBy = [ "timers.target" ];
+	    timerConfig = {
+	      OnCalendar = "weekly";
+	      Persistent = true;
+	      Unit = "downloads-cleanup.service";
+	    };
+  };
+
+  # Systemd-services
+  systemd.services."downloads-cleanup" = {
+	  script = ''
+		find ~/Downloads/ -type f -mtime +60 -delete
+		find ~/Downloads/ -type d -empty -delete
+	  '';
+	  serviceConfig = {
+	    Type = "oneshot";
+	    User = "schuasda";
+	  };
   };
 
   networking.hostName = "SchuasdaNix"; # Define your hostname.
@@ -172,22 +222,22 @@
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
 	keepassxc
-	signal-desktop
 
+	signal-desktop
 	whatsapp-for-linux
 	zulip
 	discord
 	spotify
-	vscode-fhs
-	todoist-electron
+	unstable.vscode-fhs
+	
+	unstable.todoist-electron
+	unstable.planify
+	
 	jetbrains.webstorm
 	dbeaver-bin
 	jellyfin-media-player
-	xautomation
-	xbindkeys
 	nodejs_22
 	just
-	ungit
 	gittyup
 	insomnia
 	texliveFull
@@ -199,17 +249,28 @@
 		hunspellDicts.en-gb-large
 
 	zotero
+	quickemu
 		
-	temurin-jre-bin
 	kdePackages.poppler
 	syncthing
-	zoxide
 	fish
 	vlc
 	obs-studio
 	ungoogled-chromium
 	openfortivpn
 	qalculate-qt
+	nextcloud-client
+	rquickshare
+
+	(lutris.override 
+	 {
+	   extraLibraries = pkgs: [
+		
+	   ];
+	   extraPkgs = pkgs: [
+	   	
+	   ];
+	 })
 
 	#vivaldi
     ];
@@ -224,10 +285,10 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
 	neovim
+	zoxide
 	wget
 	gnome.cheese
 	thunderbird
-	git
 	gcc
 	gdb
 	fprintd
@@ -240,8 +301,8 @@
 
   # Prevent wake up in backpack
   services.udev.extraRules = ''
-  	ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTRS{idVendor}=="32ac", ATTRS{idProduct}=="0018", ATTR{power/wakeup}="disabled", ATTR{driver/1-1.1.1.4/power/wakeup}="disabled"
-  	ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTRS{idVendor}=="32ac", ATTRS{idProduct}=="0014", ATTR{power/wakeup}="disabled", ATTR{driver/1-1.1.1.4/power/wakeup}="disabled"
+ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTRS{idVendor}=="32ac", ATTRS{idProduct}=="0018", ATTR{power/wakeup}="disabled", ATTR{driver/1-1.1.1.4/power/wakeup}="disabled"
+ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTRS{idVendor}=="32ac", ATTRS{idProduct}=="0014", ATTR{power/wakeup}="disabled", ATTR{driver/1-1.1.1.4/power/wakeup}="disabled"
   '';
 
 
@@ -256,6 +317,13 @@
 	'';
   };
 
+  # Enable git
+  programs.git = {
+	enable = true;
+	#TODO: config	
+  };
+
+  #test
 
   # Enable firefox
   programs.firefox.enable = true;
@@ -314,6 +382,5 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "23.11"; # Did you read the comment?
-
+  system.stateVersion = "23.11";
 }
