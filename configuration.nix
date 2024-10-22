@@ -81,7 +81,7 @@ in {
 	  '';
 	  serviceConfig = {
 	    Type = "oneshot";
-	    User = "schuasda";
+	    User = "root";
 	  };
   };
 
@@ -101,6 +101,9 @@ in {
 
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
+
+  # Use local time for RTC to fix windows time
+  time.hardwareClockInLocalTime = true;
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_GB.UTF-8";
@@ -219,7 +222,7 @@ in {
   users.users.schuasda = {
     isNormalUser = true;
     description = "Simon Lehmair";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "gamemode" ];
     packages = with pkgs; [
 	keepassxc
 
@@ -271,6 +274,8 @@ in {
 	   	
 	   ];
 	 })
+
+	 protonup-qt
 
 	#vivaldi
     ];
@@ -334,6 +339,12 @@ ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTRS{idVendor}=="32ac", ATTRS{
   	remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
   	dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   };
+
+  programs.gamemode = {
+	enable = true;
+	settings.general.inhibit_screensaver = 0;
+  };
+
 
   # Enable Ausweisapp and open firewall
   programs.ausweisapp = {
