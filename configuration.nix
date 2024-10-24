@@ -131,7 +131,8 @@ in {
 #  services.displayManager.sddm.wayland.enable = true;
   
   # Enable the Plasma Desktop Environment.
-  services.displayManager.sddm.enable = true;
+  #services.displayManager.sddm.enable = true;
+  services.xserver.displayManager.lightdm.enable = true;
   services.desktopManager.plasma6.enable = true;
 
 
@@ -233,13 +234,14 @@ in {
 	spotify
 	unstable.vscode-fhs
 	
-	unstable.todoist-electron
+	todoist-electron
 	unstable.planify
 	
 	jetbrains.webstorm
 	dbeaver-bin
 	jellyfin-media-player
 	nodejs_22
+	ungit
 	just
 	gittyup
 	insomnia
