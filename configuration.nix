@@ -149,6 +149,24 @@ in {
   # Configure console keymap0
   console.keyMap = "de";
 
+  # Remap Capslock to Esc on click and Ctrl on hold. Map L_Ctrl+Capslock to still toggle Capslock
+  services.keyd = {
+    enable = true;
+    keyboards = {
+      default = {
+        ids = [ "*" ];
+        settings = {
+          main = {
+            capslock = "overload(control, esc)";
+          };
+	  "control:C" = {
+	    capslock = "capslock";
+	  };
+        };
+      };
+    };
+  };
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
   services.avahi = {
@@ -240,8 +258,8 @@ in {
 	jetbrains.webstorm
 	dbeaver-bin
 	jellyfin-media-player
-	nodejs_22
-	ungit
+	nodejs
+	ungit # doesn't work
 	just
 	gittyup
 	insomnia
@@ -266,6 +284,8 @@ in {
 	qalculate-qt
 	nextcloud-client
 	rquickshare
+
+	keyd
 
 	(lutris.override 
 	 {
@@ -300,9 +320,11 @@ in {
 	gdb
 	fprintd
 	nix-update
+	htop
 	gparted
 	gh
 	touchegg
+	grub2
   ];
 
 
