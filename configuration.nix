@@ -36,16 +36,16 @@ in {
       efiSupport = true;
       enable = true;
       # set $FS_UUID to the UUID of the EFI partition
-      extraEntries = ''
-        menuentry "Windows" {
-          insmod part_gpt
-          insmod fat
-          insmod search_fs_uuid
-          insmod chain
-          search --fs-uuid --set=root $FS_UUID
-          chainloader /EFI/Microsoft/Boot/bootmgfw.efi
-        }
-      '';
+#      extraEntries = ''
+#        menuentry "Windows" {
+#          insmod part_gpt
+#          insmod fat
+#          insmod search_fs_uuid
+#          insmod chain
+#          search --fs-uuid --set=root $FS_UUID
+#          chainloader /EFI/Microsoft/Boot/bootmgfw.efi
+#        }
+#      '';
     };
   };
 
@@ -177,7 +177,7 @@ in {
 
 
   # Enable sound with pipewire.
-  sound.enable = true;
+#  sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -264,6 +264,7 @@ in {
 	gittyup
 	insomnia
 	texliveFull
+	bitwarden
 
 	libreoffice-qt
 		hunspell
@@ -298,6 +299,8 @@ in {
 	 })
 
 	 protonup-qt
+	 unstable.wineWowPackages.stable
+	 winetricks
 
 	#vivaldi
     ];
@@ -360,6 +363,7 @@ ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTRS{idVendor}=="32ac", ATTRS{
   # Enable and configure Steam
   programs.steam = {
   	enable = true;
+	protontricks.enable = true;
   	remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
   	dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   };
