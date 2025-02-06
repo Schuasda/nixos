@@ -280,7 +280,7 @@ in {
 	
 	todoist-electron
 	unstable.planify
-	ticktick
+	unstable.ticktick
 	
 	jetbrains.webstorm
 	dbeaver-bin
