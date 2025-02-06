@@ -59,7 +59,7 @@ in {
   # Enable garbage collection in the NixStore
   nix.gc = {
   	automatic = true;
-  	dates = "16:00";
+  	dates = "weekly";
 	options = "--delete-older-than 7d";
   };
 
@@ -125,16 +125,36 @@ in {
   services.fwupd.enable = true;
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
+ #services.xserver.enable = true;
   services.displayManager.defaultSession = "plasmax11";
 
-#  services.displayManager.sddm.wayland.enable = true;
+  #services.displayManager.sddm.wayland.enable = true;
   
   # Enable the Plasma Desktop Environment.
-  #services.displayManager.sddm.enable = true;
-  services.xserver.displayManager.lightdm.enable = true;
+  services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
 
+  #services.xserver.displayManager.lightdm.enable = true;
+  #services.xserver.displayManager.gdm.enable = true;
+
+
+  # Enable Hyprland Desktop Environment.
+  programs.hyprland = {
+ #   enable = true;
+    #package = unstable.hyprland;
+    withUWSM = true; # recommended for most users
+    xwayland.enable = true; # Xwayland can be disabled.
+  };
+
+ # programs.hyprlock.enable = true;
+
+  xdg.portal = {
+	enable = true;
+	extraPortals = [ 
+		pkgs.xdg-desktop-portal-kde
+		#pkgs.xdg-desktop-portal-hyprland
+		];
+  };
 
   # Enable fingerprint reader
   services.fprintd.enable = true;
@@ -195,7 +215,7 @@ in {
 
   # Enable Mopidy msuic server
   services.mopidy = {
-	enable = true;
+	enable = false;
 	extensionPackages = with pkgs; [
 		mopidy-local
 		mopidy-iris
@@ -251,9 +271,16 @@ in {
 	discord
 	spotify
 	unstable.vscode-fhs
+
+	fishPlugins.grc
+	fishPlugins.fzf-fish
+	fishPlugins.forgit
+	fzf
+	grc
 	
 	todoist-electron
 	unstable.planify
+	ticktick
 	
 	jetbrains.webstorm
 	dbeaver-bin
@@ -265,6 +292,7 @@ in {
 	insomnia
 	texliveFull
 	bitwarden
+	unstable.prusa-slicer
 
 	libreoffice-qt
 		hunspell
@@ -276,8 +304,11 @@ in {
 	quickemu
 		
 	kdePackages.poppler
+	kdePackages.kio-gdrive
+	kdePackages.kaccounts-providers
+	kdePackages.kaccounts-integration
+
 	syncthing
-	fish
 	vlc
 	obs-studio
 	ungoogled-chromium
@@ -286,7 +317,6 @@ in {
 	nextcloud-client
 	rquickshare
 
-	keyd
 
 	(lutris.override 
 	 {
@@ -298,9 +328,21 @@ in {
 	   ];
 	 })
 
-	 protonup-qt
-	 unstable.wineWowPackages.stable
-	 winetricks
+	protonup-qt
+	unstable.wineWowPackages.stable
+	winetricks
+
+	(waybar.overrideAttrs (oldAttrs: {
+		mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
+	})
+	)
+	dunst
+	libnotify
+	kitty
+	alacritty
+	rofi-wayland
+	nautilus
+
 
 	#vivaldi
     ];
@@ -317,7 +359,7 @@ in {
 	neovim
 	zoxide
 	wget
-	gnome.cheese
+	cheese
 	thunderbird
 	gcc
 	gdb
@@ -355,7 +397,25 @@ ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTRS{idVendor}=="32ac", ATTRS{
 	#TODO: config	
   };
 
-  #test
+  programs.fish = {
+  	enable = true;
+	shellInit = "zoxide init fish | source";
+  };
+  programs.bash = {
+	interactiveShellInit = ''
+	    if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
+	    then
+	      shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
+	      exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
+	    fi
+	  '';
+
+  };
+
+  environment.shellAliases = {
+	ll = "ls -l";
+	la = "ls -la";
+  };
 
   # Enable firefox
   programs.firefox.enable = true;
@@ -383,6 +443,15 @@ ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTRS{idVendor}=="32ac", ATTRS{
   # Enable KDE Connect
   programs.kdeconnect.enable = true;
 
+  services.ollama = {
+	enable = true;
+	acceleration = "rocm";
+	loadModels = [ "deepseek-r1:8b" ];
+  };
+  services.open-webui = {
+  	enable = true;
+  	package = unstable.open-webui;
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
