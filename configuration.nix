@@ -2,22 +2,26 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ 
-  config, 
-  pkgs ? import <nixpkgs> {},
-  ... 
+{
+  config,
+  pkgs ? import <nixpkgs> { },
+  ...
 }:
-
-let
-    unstable = import <unstable> { config = { allowUnfree = true; }; };
-in {
+{
   nix.settings.experimental-features = [ "nix-command" ];
 
-  imports =
-    [ # Include the results of the hardware scan.
-      <nixos-hardware/framework/16-inch/7040-amd>
-      ./hardware-configuration.nix
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+    <nixos-hardware/framework/16-inch/7040-amd>
+    ./hardware-configuration.nix
+
+    ./myModules.nix
+
+    ./hypr.nix
+    ./kde.nix
+
+    ./packages.nix
+  ];
 
   # Bootloader.
   boot.loader = {
@@ -36,16 +40,16 @@ in {
       efiSupport = true;
       enable = true;
       # set $FS_UUID to the UUID of the EFI partition
-#      extraEntries = ''
-#        menuentry "Windows" {
-#          insmod part_gpt
-#          insmod fat
-#          insmod search_fs_uuid
-#          insmod chain
-#          search --fs-uuid --set=root $FS_UUID
-#          chainloader /EFI/Microsoft/Boot/bootmgfw.efi
-#        }
-#      '';
+      #      extraEntries = ''
+      #        menuentry "Windows" {
+      #          insmod part_gpt
+      #          insmod fat
+      #          insmod search_fs_uuid
+      #          insmod chain
+      #          search --fs-uuid --set=root $FS_UUID
+      #          chainloader /EFI/Microsoft/Boot/bootmgfw.efi
+      #        }
+      #      '';
     };
   };
 
@@ -58,35 +62,35 @@ in {
 
   # Enable garbage collection in the NixStore
   nix.gc = {
-  	automatic = true;
-  	dates = "weekly";
-	options = "--delete-older-than 7d";
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
   };
 
   # Systemd-timers
   systemd.timers."downloads-cleanup" = {
-	  wantedBy = [ "timers.target" ];
-	    timerConfig = {
-	      OnCalendar = "weekly";
-	      Persistent = true;
-	      Unit = "downloads-cleanup.service";
-	    };
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "weekly";
+      Persistent = true;
+      Unit = "downloads-cleanup.service";
+    };
   };
 
   # Systemd-services
   systemd.services."downloads-cleanup" = {
-	  script = ''
-		find ~/Downloads/ -type f -mtime +60 -delete
-		find ~/Downloads/ -type d -empty -delete
-	  '';
-	  serviceConfig = {
-	    Type = "oneshot";
-	    User = "schuasda";
-	  };
+    script = ''
+      		find ~/Downloads/ -type f -mtime +60 -delete
+      		find ~/Downloads/ -type d -empty -delete
+      	  '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "schuasda";
+    };
   };
 
   networking.hostName = "SchuasdaNix"; # Define your hostname.
-#  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  # networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -120,51 +124,11 @@ in {
     LC_TIME = "de_DE.UTF-8";
   };
 
-
   # Enable Firmware Update through fwupd
   services.fwupd.enable = true;
 
-  # Enable the X11 windowing system.
- #services.xserver.enable = true;
-  services.displayManager.defaultSession = "plasmax11";
-
-  #services.displayManager.sddm.wayland.enable = true;
-  
-  # Enable the Plasma Desktop Environment.
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
-
-  #services.xserver.displayManager.lightdm.enable = true;
-  #services.xserver.displayManager.gdm.enable = true;
-
-
-  # Enable Hyprland Desktop Environment.
-  programs.hyprland = {
- #   enable = true;
-    #package = unstable.hyprland;
-    withUWSM = true; # recommended for most users
-    xwayland.enable = true; # Xwayland can be disabled.
-  };
-
- # programs.hyprlock.enable = true;
-
-  xdg.portal = {
-	enable = true;
-	extraPortals = [ 
-		pkgs.xdg-desktop-portal-kde
-		#pkgs.xdg-desktop-portal-hyprland
-		];
-  };
-
   # Enable fingerprint reader
   services.fprintd.enable = true;
-    
-  # Configure keymap in X11
-  services.xserver.xkb = {
-
-    layout = "de";
-    variant = "";
-  };
 
   # Configure console keymap0
   console.keyMap = "de";
@@ -179,9 +143,9 @@ in {
           main = {
             capslock = "overload(control, esc)";
           };
-	  "control:C" = {
-	    capslock = "capslock";
-	  };
+          "control:C" = {
+            capslock = "capslock";
+          };
         };
       };
     };
@@ -190,14 +154,13 @@ in {
   # Enable CUPS to print documents.
   services.printing.enable = true;
   services.avahi = {
-	enable = true;
-  	nssmdns4 = true;
-  	openFirewall = true;
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
   };
 
-
   # Enable sound with pipewire.
-#  sound.enable = true;
+  #  sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -215,41 +178,40 @@ in {
 
   # Enable Mopidy msuic server
   services.mopidy = {
-	enable = false;
-	extensionPackages = with pkgs; [
-		mopidy-local
-		mopidy-iris
-		mopidy-spotify
-		mopidy-soundcloud
-	];
-	configuration = ''
-		[file]
-		enabled = true
-		media_dirs =
-		    home/schuasda/Music/ |Music
-		show_dotfiles = false
-		excluded_file_extensions =
-		  .directory
-		  .html
-		  .jpeg
-		  .jpg
-		  .log
-		  .nfo
-		  .pdf
-		  .png
-		  .txt
-		  .zip
-		follow_symlinks = false
-		metadata_timeout = 1000
+    enable = false;
+    extensionPackages = with pkgs; [
+      mopidy-local
+      mopidy-iris
+      mopidy-spotify
+      mopidy-soundcloud
+    ];
+    configuration = ''
+      		[file]
+      		enabled = true
+      		media_dirs =
+      		    home/schuasda/Music/ |Music
+      		show_dotfiles = false
+      		excluded_file_extensions =
+      		  .directory
+      		  .html
+      		  .jpeg
+      		  .jpg
+      		  .log
+      		  .nfo
+      		  .pdf
+      		  .png
+      		  .txt
+      		  .zip
+      		follow_symlinks = false
+      		metadata_timeout = 1000
 
-		[spotify]
-		username = simon@fonto.de	
-		password = 
-		client_id = 9961d79b-c6e6-49c7-80fd-e0276a840b37
-		client_secret = O7_T_Fi4N53HAm2Q1hFrLBSo5-alIz7UOSchiM8QswA=
-	'';
+      		[spotify]
+      		username = simon@fonto.de	
+      		password = 
+      		client_id = 9961d79b-c6e6-49c7-80fd-e0276a840b37
+      		client_secret = O7_T_Fi4N53HAm2Q1hFrLBSo5-alIz7UOSchiM8QswA=
+      	'';
   };
-
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
@@ -261,196 +223,40 @@ in {
   users.users.schuasda = {
     isNormalUser = true;
     description = "Simon Lehmair";
-    extraGroups = [ "networkmanager" "wheel" "gamemode" ];
-    packages = with pkgs; [
-	keepassxc
-
-	signal-desktop
-	whatsapp-for-linux
-	zulip
-	discord
-	spotify
-	unstable.vscode-fhs
-
-	fishPlugins.grc
-	fishPlugins.fzf-fish
-	fishPlugins.forgit
-	fzf
-	grc
-	
-	todoist-electron
-	unstable.planify
-	unstable.ticktick
-	
-	jetbrains.webstorm
-	dbeaver-bin
-	jellyfin-media-player
-	nodejs
-	ungit # doesn't work
-	just
-	gittyup
-	insomnia
-	texliveFull
-	bitwarden
-	unstable.prusa-slicer
-
-	libreoffice-qt
-		hunspell
-		hunspellDicts.de_DE
-		hunspellDicts.en_US-large
-		hunspellDicts.en-gb-large
-
-	zotero
-	quickemu
-		
-	kdePackages.poppler
-	kdePackages.kio-gdrive
-	kdePackages.kaccounts-providers
-	kdePackages.kaccounts-integration
-
-	syncthing
-	vlc
-	obs-studio
-	ungoogled-chromium
-	openfortivpn
-	qalculate-qt
-	nextcloud-client
-	rquickshare
-
-
-	(lutris.override 
-	 {
-	   extraLibraries = pkgs: [
-		
-	   ];
-	   extraPkgs = pkgs: [
-	   	
-	   ];
-	 })
-
-	protonup-qt
-	unstable.wineWowPackages.stable
-	winetricks
-
-	(waybar.overrideAttrs (oldAttrs: {
-		mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
-	})
-	)
-	dunst
-	libnotify
-	kitty
-	alacritty
-	rofi-wayland
-	nautilus
-
-
-	#vivaldi
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "gamemode"
+      "wireshark"
     ];
   };
 
   # Disable automatic login for the user.
-  services.displayManager.autoLogin.enable = false;
-  services.displayManager.autoLogin.user = "schuasda";
-
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-	neovim
-	zoxide
-	wget
-	cheese
-	thunderbird
-	gcc
-	gdb
-	fprintd
-	nix-update
-	htop
-	gparted
-	gh
-	touchegg
-	grub2
-  ];
-
+  services.displayManager.autoLogin = {
+    enable = false;
+    user = "schuasda";
+  };
 
   # Prevent wake up in backpack
   services.udev.extraRules = ''
-ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTRS{idVendor}=="32ac", ATTRS{idProduct}=="0018", ATTR{power/wakeup}="disabled", ATTR{driver/1-1.1.1.4/power/wakeup}="disabled"
-ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTRS{idVendor}=="32ac", ATTRS{idProduct}=="0014", ATTR{power/wakeup}="disabled", ATTR{driver/1-1.1.1.4/power/wakeup}="disabled"
+    ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTRS{idVendor}=="32ac", ATTRS{idProduct}=="0018", ATTR{power/wakeup}="disabled", ATTR{driver/1-1.1.1.4/power/wakeup}="disabled"
+    ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTRS{idVendor}=="32ac", ATTRS{idProduct}=="0014", ATTR{power/wakeup}="disabled", ATTR{driver/1-1.1.1.4/power/wakeup}="disabled"
   '';
-
 
   # Configure other environment parameters
   environment.etc = {
-  	# touchpad palm rejection
-	"libinput/local-overrides.quirks".text = ''
-	  [Keyboard]
-	  MatchUdevType=keyboard
-	  MatchName=Framework Laptop 16 Keyboard Module - ANSI Keyboard
-	  AttrKeyboardIntegration=internal
-	'';
-  };
-
-  # Enable git
-  programs.git = {
-	enable = true;
-	#TODO: config	
-  };
-
-  programs.fish = {
-  	enable = true;
-	shellInit = "zoxide init fish | source";
-  };
-  programs.bash = {
-	interactiveShellInit = ''
-	    if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
-	    then
-	      shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
-	      exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
-	    fi
-	  '';
-
+    # touchpad palm rejection
+    "libinput/local-overrides.quirks".text = ''
+      	  [Keyboard]
+      	  MatchUdevType=keyboard
+      	  MatchName=Framework Laptop 16 Keyboard Module - ANSI Keyboard
+      	  AttrKeyboardIntegration=internal
+      	'';
   };
 
   environment.shellAliases = {
-	ll = "ls -l";
-	la = "ls -la";
-  };
-
-  # Enable firefox
-  programs.firefox.enable = true;
-
-  # Enable and configure Steam
-  programs.steam = {
-  	enable = true;
-	protontricks.enable = true;
-  	remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-  	dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-  };
-
-  programs.gamemode = {
-	enable = true;
-	settings.general.inhibit_screensaver = 0;
-  };
-
-
-  # Enable Ausweisapp and open firewall
-  programs.ausweisapp = {
-	enable = true;
-	openFirewall = true;
-  };
-
-  # Enable KDE Connect
-  programs.kdeconnect.enable = true;
-
-  services.ollama = {
-	enable = true;
-	acceleration = "rocm";
-	loadModels = [ "deepseek-r1:8b" ];
-  };
-  services.open-webui = {
-  	enable = true;
-  	package = unstable.open-webui;
+    ll = "ls -l";
+    la = "ls -la";
   };
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -474,14 +280,20 @@ ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTRS{idVendor}=="32ac", ATTRS{
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
-  networking.firewall = { 
+  networking.firewall = {
     enable = true;
-    allowedTCPPortRanges = [ 
-      { from = 1714; to = 1764; } # KDE Connect
-    ];  
-    allowedUDPPortRanges = [ 
-      { from = 1714; to = 1764; } # KDE Connect
-    ];  
+    allowedTCPPortRanges = [
+      {
+        from = 1714;
+        to = 1764;
+      } # KDE Connect
+    ];
+    allowedUDPPortRanges = [
+      {
+        from = 1714;
+        to = 1764;
+      } # KDE Connect
+    ];
   };
 
   # This value determines the NixOS release from which the default
