@@ -130,6 +130,8 @@
   # Enable fingerprint reader
   services.fprintd.enable = true;
 
+  services.envfs.enable = true;
+
   # Configure console keymap0
   console.keyMap = "de";
 

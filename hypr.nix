@@ -54,5 +54,33 @@ in
     kitty
     rofi-wayland
     nautilus
+
+    # ml4w packages
+    hyprshade
+    swaynotificationcenter
+    pavucontrol
+    blueman
+    cliphist
+    gum
+    oh-my-posh
+    waypaper
+    pywal
+    bibata-cursors
+    papirus-icon-theme
+    grim
+    grimblast
+    slurp
+    wlogout
+    nwg-dock-hyprland
+    nwg-look
+    figlet
+    gnused
+    vim
+    xdg-user-dirs
+    xdg-user-dirs-gtk
+  ];
+
+  fonts.packages = with pkgs; [
+    font-awesome
   ];
 }

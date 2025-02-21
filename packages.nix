@@ -19,6 +19,9 @@ in
     nixfmt-rfc-style
     zoxide
     wget
+    zip
+    unzip
+    rsync
     cheese
     thunderbird
     gcc
@@ -84,10 +87,12 @@ in
       vlc
       obs-studio
       ungoogled-chromium
+      unstable.floorp
       openfortivpn
       qalculate-qt
       nextcloud-client
       rquickshare
+      fastfetch
 
       (lutris.override {
         extraLibraries = pkgs: [
