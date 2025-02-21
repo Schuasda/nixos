@@ -125,6 +125,7 @@ in
   # Enable git
   programs.git = {
     enable = true;
+    lfs.enable = true;
     #TODO: config
   };
 
