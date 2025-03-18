@@ -35,6 +35,10 @@ in
     grub2
   ];
 
+  nixpkgs.config.permittedInsecurePackages = [
+                "electron-32.3.3"
+              ];
+
   users.users.schuasda.packages =
     with pkgs;
     [

@@ -78,6 +78,8 @@ in
     vim
     xdg-user-dirs
     xdg-user-dirs-gtk
+
+    # wallust
   ];
 
   fonts.packages = with pkgs; [
