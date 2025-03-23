@@ -18,7 +18,7 @@
     ./myModules.nix
 
     ./hypr.nix
-    ./kde.nix
+    # ./kde.nix
 
     ./packages.nix
   ];

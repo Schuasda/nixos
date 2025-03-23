@@ -72,6 +72,7 @@ in
       texliveFull
       bitwarden
       unstable.prusa-slicer
+      unstable.orca-slicer
 
       libreoffice-qt
       hunspell
@@ -82,10 +83,7 @@ in
       zotero
       quickemu
 
-      # kdePackages.poppler
-      # kdePackages.kio-gdrive
-      # kdePackages.kaccounts-providers
-      # kdePackages.kaccounts-integration
+      pdf4qt
 
       syncthing
       vlc
@@ -108,21 +106,7 @@ in
       })
       protonup-qt
       unstable.wineWowPackages.stable
-      # winetricks
 
-      # hyprland
-      # (waybar.overrideAttrs (oldAttrs: {
-      #   mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
-      # }))
-      # dunst
-      # libnotify
-      # kitty
-      # # alacritty
-      # kitty
-      # rofi-wayland
-      # nautilus
-
-      #vivaldi
     ]
     ++ config.deskenv.packages;
 
