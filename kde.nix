@@ -18,10 +18,6 @@ in
   # services.xserver.enable = true;
   services.displayManager.defaultSession = "plasmax11";
 
-  services.displayManager.sddm.wayland.enable = true;
-
-  # Enable the Plasma Desktop Environment.
-  services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
 
   #services.xserver.displayManager.lightdm.enable = true;

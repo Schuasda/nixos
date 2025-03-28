@@ -26,6 +26,8 @@ in
     xwayland.enable = true; # Xwayland can be disabled.
   };
 
+  security.polkit.enable = true;
+
    programs.hyprlock = {
      enable = true;
      package = unstable.hyprlock;
@@ -47,6 +49,7 @@ in
     hyprpaper
     hyprgui
     waybar
+    hyprpolkitagent
 
     dunst
     libnotify

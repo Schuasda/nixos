@@ -44,7 +44,15 @@ in
     [
       keepassxc
 
-      signal-desktop
+      #signal-desktop
+      (pkgs.symlinkJoin {
+          name = "signal-desktop";
+          paths = [ pkgs.signal-desktop ];
+          buildInputs = [ pkgs.makeWrapper ];
+          postBuild = ''
+            wrapProgram $out/bin/signal-desktop --add-flags --password-store="kwallet6"
+          '';
+        })
       whatsapp-for-linux
       zulip
       discord
@@ -84,6 +92,8 @@ in
       quickemu
 
       pdf4qt
+      kdePackages.kate
+      kdePackages.okular
 
       syncthing
       vlc
@@ -160,7 +170,7 @@ in
   };
 
   services.ollama = {
-    enable = true;
+    # enable = true;
     acceleration = "rocm";
     loadModels = [ "deepseek-r1:8b" ];
   };

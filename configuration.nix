@@ -55,6 +55,11 @@
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
 
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+  };
+
   services.logrotate.checkConfig = false;
 
   # Enable auto upgrade
@@ -176,6 +181,13 @@
     # use the example session manager (no others are packaged yet so this is enabled by default,
     # no need to redefine it in your config for now)
     #media-session.enable = true;
+  };
+
+  security = {
+    pam.services.kwallet = {
+      name = "kwallet";
+      enableKwallet = true;
+    };
   };
 
   # Enable Mopidy msuic server
