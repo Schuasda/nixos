@@ -54,6 +54,7 @@ in
           '';
         })
       whatsapp-for-linux
+      element-desktop
       zulip
       discord
       spotify
@@ -63,6 +64,7 @@ in
       fishPlugins.fzf-fish
       fishPlugins.forgit
       fzf
+      #docker
       grc
 
       todoist-electron

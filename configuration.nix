@@ -56,7 +56,7 @@
   boot.kernelPackages = pkgs.linuxPackages_zen;
 
   services.displayManager.sddm = {
-    enable = true;
+    enable = false;
     wayland.enable = true;
   };
 
@@ -64,6 +64,9 @@
 
   # Enable auto upgrade
   system.autoUpgrade.enable = true;
+
+
+  virtualisation.docker.enable = true;
 
   # Enable garbage collection in the NixStore
   nix.gc = {
@@ -183,12 +186,12 @@
     #media-session.enable = true;
   };
 
-  security = {
-    pam.services.kwallet = {
-      name = "kwallet";
-      enableKwallet = true;
-    };
-  };
+  # security = {
+  #   pam.services.kwallet = {
+  #     name = "kwallet";
+  #     enableKwallet = true;
+  #   };
+  # };
 
   # Enable Mopidy msuic server
   services.mopidy = {
@@ -242,6 +245,7 @@
       "wheel"
       "gamemode"
       "wireshark"
+      "docker"
     ];
   };
 

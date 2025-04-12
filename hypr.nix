@@ -26,7 +26,7 @@ in
     xwayland.enable = true; # Xwayland can be disabled.
   };
 
-  security.polkit.enable = true;
+  services.gnome.gnome-keyring.enable = true;
 
    programs.hyprlock = {
      enable = true;
@@ -57,6 +57,7 @@ in
     kitty
     rofi-wayland
     nautilus
+    kdePackages.dolphin
 
     # ml4w packages
     hyprshade
