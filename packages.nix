@@ -50,7 +50,7 @@ in
           paths = [ pkgs.signal-desktop ];
           buildInputs = [ pkgs.makeWrapper ];
           postBuild = ''
-            wrapProgram $out/bin/signal-desktop --add-flags --password-store="kwallet6"
+            wrapProgram $out/bin/signal-desktop --add-flags --password-store="gnome-keyring"
           '';
         })
       whatsapp-for-linux
