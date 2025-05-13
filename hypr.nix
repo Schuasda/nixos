@@ -21,7 +21,7 @@ in
 
   programs.hyprland = {
     enable = true;
-    #package = unstable.hyprland;
+    # package = unstable.hyprland;
     withUWSM = true; # recommended for most users
     xwayland.enable = true; # Xwayland can be disabled.
   };
@@ -37,24 +37,26 @@ in
      package = unstable.hypridle;
    };
 
-  # xdg.portal = {
-  #   enable = true;
-  #   extraPortals = [
-  #     pkgs.xdg-desktop-portal-kde
-  #     # pkgs.xdg-desktop-portal-hyprland
-  #   ];
-  # };
+   xdg.portal = {
+     enable = true;
+     extraPortals = [
+       pkgs.xdg-desktop-portal-kde
+       pkgs.xdg-desktop-portal
+       # pkgs.xdg-desktop-portal-hyprland
+     ];
+   };
 
   deskenv.packages = with pkgs; [
     hyprpaper
-    hyprgui
+    # hyprgui
     waybar
     hyprpolkitagent
+    hyprls
 
     dunst
     libnotify
     # alacritty
-    kitty
+    unstable.kitty
     rofi-wayland
     nautilus
     kdePackages.dolphin
@@ -82,8 +84,17 @@ in
     vim
     xdg-user-dirs
     xdg-user-dirs-gtk
+    brightnessctl
+    playerctl
+    jq
+    polkit_gnome
+    wl-clipboard
+    unstable.yay
+    pacman
 
-    # wallust
+    # hyprland plugins
+    hyprlandPlugins.hyprspace
+    hyprlandPlugins.hyprtrails
   ];
 
   fonts.packages = with pkgs; [

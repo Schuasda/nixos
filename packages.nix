@@ -31,7 +31,7 @@ in
     htop
     gparted
     gh
-    touchegg
+    # touchegg
     grub2
   ];
 
@@ -56,26 +56,39 @@ in
       whatsapp-for-linux
       element-desktop
       zulip
+      zoom-us
+      gnucash
+      nextcloud-client
       discord
       spotify
       unstable.vscode-fhs
+      unstable.devenv
+      direnv
+      uv
+      unstable.godot_4
+      google-cloud-sdk
 
       fishPlugins.grc
       fishPlugins.fzf-fish
       fishPlugins.forgit
       fzf
-      #docker
+      docker-client
       grc
+
+      zenith
+      zenstates
+      zenmonitor
 
       todoist-electron
       #unstable.planify
       unstable.ticktick
 
-      jetbrains.webstorm
+      # jetbrains.webstorm
       dbeaver-bin
       jellyfin-media-player
       nodejs
-      ungit # doesn't work
+      ungit
+      unstable.jujutsu
       just
       gittyup
       insomnia
@@ -94,6 +107,7 @@ in
       quickemu
 
       pdf4qt
+      zathura
       kdePackages.kate
       kdePackages.okular
 
@@ -104,7 +118,6 @@ in
       unstable.floorp
       openfortivpn
       qalculate-qt
-      nextcloud-client
       rquickshare
       fastfetch
 
@@ -144,8 +157,21 @@ in
 
   };
 
+  programs.kdeconnect = {
+    enable = true;
+    package = pkgs.kdePackages.kdeconnect-kde;
+  };
+
   # Enable firefox
   programs.firefox.enable = true;
+  
+  # Enable Nextcloud
+  services.nextcloud = {
+    enable = false;
+    hostName = "cloud.fsim-ev.de";
+    package = pkgs.nextcloud31;
+    # TODO: user config?
+  };
 
   # Enable and configure Steam
   programs.steam = {

@@ -8,7 +8,11 @@
   ...
 }:
 {
-  nix.settings.experimental-features = [ "nix-command" ];
+  nix.settings = {
+    experimental-features = [ "nix-command" ];
+    trusted-users = ["schuasda"];
+
+    };
 
   imports = [
     # Include the results of the hardware scan.
@@ -163,11 +167,15 @@
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+  # Enable printer autodiscovery
   services.avahi = {
     enable = true;
     nssmdns4 = true;
     openFirewall = true;
   };
+
+  # Enable flatpak
+  services.flatpak.enable = true;
 
   # Enable sound with pipewire.
   #  sound.enable = true;
@@ -301,16 +309,16 @@
   networking.firewall = {
     enable = true;
     allowedTCPPortRanges = [
-      {
-        from = 1714;
-        to = 1764;
-      } # KDE Connect
-    ];
-    allowedUDPPortRanges = [
-      {
-        from = 1714;
-        to = 1764;
-      } # KDE Connect
+#      {
+#        from = 1714;
+#        to = 1764;
+#      } # KDE Connect
+#    ];
+#    allowedUDPPortRanges = [
+#      {
+#        from = 1714;
+#        to = 1764;
+#      } # KDE Connect
     ];
   };
 
