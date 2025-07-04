@@ -1,7 +1,6 @@
 {
   config,
   pkgs ? import <nixpkgs> { },
-  lib,
   ...
 }:
 let
@@ -33,119 +32,20 @@ in
     gh
     # touchegg
     grub2
+
+    mesa
+    libGLU
   ];
 
   nixpkgs.config.permittedInsecurePackages = [
-                "electron-32.3.3"
-              ];
+    "electron-32.3.3"
+  ];
 
   users.users.schuasda.packages =
-    with pkgs;
+    # with pkgs;
     [
-      keepassxc
+    ] ++ config.deskenv.packages;
 
-      #signal-desktop
-      (pkgs.symlinkJoin {
-          name = "signal-desktop";
-          paths = [ pkgs.signal-desktop ];
-          buildInputs = [ pkgs.makeWrapper ];
-          postBuild = ''
-            wrapProgram $out/bin/signal-desktop --add-flags --password-store="gnome-keyring"
-          '';
-        })
-      whatsapp-for-linux
-      element-desktop
-      zulip
-      zoom-us
-      gnucash
-      nextcloud-client
-      discord
-      spotify
-      unstable.vscode-fhs
-      unstable.devenv
-      direnv
-      uv
-      unstable.godot_4
-      google-cloud-sdk
-
-      fishPlugins.grc
-      fishPlugins.fzf-fish
-      fishPlugins.forgit
-      fzf
-      docker-client
-      grc
-
-      zenith
-      zenstates
-      zenmonitor
-
-      todoist-electron
-      #unstable.planify
-      unstable.ticktick
-
-      # jetbrains.webstorm
-      dbeaver-bin
-      jellyfin-media-player
-      nodejs
-      ungit
-      unstable.jujutsu
-      just
-      gittyup
-      insomnia
-      texliveFull
-      bitwarden
-      unstable.prusa-slicer
-      unstable.orca-slicer
-
-      libreoffice-qt
-      hunspell
-      hunspellDicts.de_DE
-      hunspellDicts.en_US-large
-      hunspellDicts.en-gb-large
-
-      zotero
-      quickemu
-
-      pdf4qt
-      zathura
-      kdePackages.kate
-      kdePackages.okular
-
-      syncthing
-      vlc
-      obs-studio
-      ungoogled-chromium
-      unstable.floorp
-      openfortivpn
-      qalculate-qt
-      rquickshare
-      fastfetch
-
-      (lutris.override {
-        extraLibraries = pkgs: [
-
-        ];
-        extraPkgs = pkgs: [
-
-        ];
-      })
-      protonup-qt
-      unstable.wineWowPackages.stable
-
-    ]
-    ++ config.deskenv.packages;
-
-  # Enable git
-  programs.git = {
-    enable = true;
-    lfs.enable = true;
-    #TODO: config
-  };
-
-  programs.fish = {
-    enable = true;
-    shellInit = "zoxide init fish | source";
-  };
   programs.bash = {
     interactiveShellInit = ''
       	    if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
@@ -153,24 +53,11 @@ in
       	      shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
       	      exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
       	    fi
-      	  '';
+            # if uwsm check may-start; then
+            #   exec uwsm start hyprland-uwsm.desktop
+            # fi
+    '';
 
-  };
-
-  programs.kdeconnect = {
-    enable = true;
-    package = pkgs.kdePackages.kdeconnect-kde;
-  };
-
-  # Enable firefox
-  programs.firefox.enable = true;
-  
-  # Enable Nextcloud
-  services.nextcloud = {
-    enable = false;
-    hostName = "cloud.fsim-ev.de";
-    package = pkgs.nextcloud31;
-    # TODO: user config?
   };
 
   # Enable and configure Steam

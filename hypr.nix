@@ -1,7 +1,5 @@
 {
-  config,
   pkgs ? import <nixpkgs> { },
-  lib,
   ...
 }:
 let
@@ -12,7 +10,7 @@ let
   };
 in
 {
-  imports = [ ./myModules.nix ];
+  # imports = [ ./myModules.nix ];
 
   # Enable Hyprland Desktop Environment.
 
@@ -40,7 +38,7 @@ in
    xdg.portal = {
      enable = true;
      extraPortals = [
-       pkgs.xdg-desktop-portal-kde
+       pkgs.kdePackages.xdg-desktop-portal-kde
        pkgs.xdg-desktop-portal
        # pkgs.xdg-desktop-portal-hyprland
      ];
@@ -56,7 +54,7 @@ in
     dunst
     libnotify
     # alacritty
-    unstable.kitty
+    # unstable.kitty
     rofi-wayland
     nautilus
     kdePackages.dolphin
@@ -94,7 +92,7 @@ in
 
     # hyprland plugins
     hyprlandPlugins.hyprspace
-    hyprlandPlugins.hyprtrails
+    unstable.hyprlandPlugins.hyprtrails
   ];
 
   fonts.packages = with pkgs; [

@@ -3,16 +3,15 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 {
-  config,
   pkgs ? import <nixpkgs> { },
   ...
 }:
 {
   nix.settings = {
-    experimental-features = [ "nix-command" ];
-    trusted-users = ["schuasda"];
+    experimental-features = [ "nix-command flakes" ];
+    trusted-users = [ "schuasda" ];
 
-    };
+  };
 
   imports = [
     # Include the results of the hardware scan.
@@ -69,7 +68,6 @@
   # Enable auto upgrade
   system.autoUpgrade.enable = true;
 
-
   virtualisation.docker.enable = true;
 
   # Enable garbage collection in the NixStore
@@ -111,9 +109,32 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+#  networking.nameservers = [ "1.1.1.1#one.one.one.one" "1.0.0.1#one.one.one.one" ];
+#
+#  services.resolved = {
+#    enable = true;
+#    dnssec = "true";
+#    domains = [ "~." ];
+#    fallbackDns = [
+#      "1.1.1.1#one.one.one.one"
+#      "1.0.0.1#one.one.one.one"
+#    ];
+#    dnsovertls = "true";
+#  };
+
   # Enable bluetooth
-  hardware.bluetooth.enable = true; # enables support for Bluetooth
-  hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
+  hardware.bluetooth = {
+    enable = true; # enables support for Bluetooth
+    powerOnBoot = true; # powers up the default Bluetooth controller on boot
+  };
+
+  # Enable OpenGL
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      amdvlk
+    ];
+  };
 
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
@@ -179,7 +200,7 @@
 
   # Enable sound with pipewire.
   #  sound.enable = true;
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -242,15 +263,19 @@
   # services.xserver.libinput.enable = true;
 
   # Enable installation of programs with unfree an licnese.
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config = {
+    allowUnfree = true;
+  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.schuasda = {
     isNormalUser = true;
     description = "Simon Lehmair";
     extraGroups = [
-      "networkmanager"
       "wheel"
+      "input"
+      "networkmanager"
+      "video"
       "gamemode"
       "wireshark"
       "docker"
@@ -280,10 +305,14 @@
       	'';
   };
 
+  environment.localBinInPath = true;
+  
   environment.shellAliases = {
     ll = "ls -l";
     la = "ls -la";
   };
+
+  programs.nix-ld.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -308,19 +337,83 @@
   # networking.firewall.enable = false;
   networking.firewall = {
     enable = true;
+    allowedUDPPorts = [ 51820 ]; # Clients and peers can use the same port, see listenport
     allowedTCPPortRanges = [
-#      {
-#        from = 1714;
-#        to = 1764;
-#      } # KDE Connect
-#    ];
-#    allowedUDPPortRanges = [
-#      {
-#        from = 1714;
-#        to = 1764;
-#      } # KDE Connect
+      #      {
+      #        from = 1714;
+      #        to = 1764;
+      #      } # KDE Connect
+      #    ];
+      #    allowedUDPPortRanges = [
+      #      {
+      #        from = 1714;
+      #        to = 1764;
+      #      } # KDE Connect
     ];
   };
+
+  # Enable WireGuard
+  #  networking.wireguard.interfaces = {
+  #    # "wg0" is the network interface name. You can name the interface arbitrarily.
+  #    kicc = {
+  #      # Determines the IP address and subnet of the client's end of the tunnel interface.
+  #      ips = [ "10.166.184.4/24" ];
+  #      listenPort = 51820; # to match firewall allowedUDPPorts (without this wg uses random port numbers)
+  #
+  #      # Path to the private key file.
+  #      #
+  #      # Note: The private key can also be included inline via the privateKey option,
+  #      # but this makes the private key world-readable; thus, using privateKeyFile is
+  #      # recommended.
+  #      privateKey = "yMYuXITYoovdwElGdCNh3aGDtsLE6iBrjDNPlHEpnG8=";
+  #
+  #      peers = [
+  #        # For a client configuration, one peer entry fodoxygenr the server will suffice.
+  #
+  #        {
+  #          # Public key of the server (not a file path).
+  #          publicKey = "3n2NEuxobCL9ihAt1o32dngc1t3WeZRxiQLNppAhthI=";
+  #
+  #          presharedKey = "KzvBEH0nZHI1mmwWwgXTb4WR0ycP5c4iVxXcBrnQyKA=";
+  #          # Forward all the traffic via VPN.
+  #          allowedIPs = [ "0.0.0.0/0" ];
+  #          # Or forward only particular subnets
+  #          #allowedIPs = [ "10.100.0.1" "91.108.12.0/22" ];
+  #
+  #          # Set this to the server IP and port.
+  #          endpoint = "34.58.191.62:51820"; # ToDo: route to endpoint not automatically configured https://wiki.archlinux.org/index.php/WireGuard#Loop_routing https://discourse.nixos.org/t/solved-minimal-firewall-setup-for-wireguard-client/7577
+  #
+  #          # Send keepalives every 25 seconds. Important to keep NAT tables alive.
+  #          persistentKeepalive = 25;
+  #        }
+  #      ];
+  #    };
+  #  };
+
+  networking.wg-quick.interfaces.kicc = {
+    configFile = "/home/schuasda/kicc.conf";
+
+    autostart = false;
+
+  };
+
+  #  networking.wg-quick.interfaces = {
+  #    kicc = {
+  #      address = [ "10.166.184.4/24" ];
+  #      dns = [ "10.166.184.1" ];
+  #      privateKeyFile = "yMYuXITYoovdwElGdCNh3aGDtsLE6iBrjDNPlHEpnG8=";
+  #
+  #      peers = [
+  #        {
+  #          publicKey = "3n2NEuxobCL9ihAt1o32dngc1t3WeZRxiQLNppAhthI=";
+  #          presharedKey = "KzvBEH0nZHI1mmwWwgXTb4WR0ycP5c4iVxXcBrnQyKA=";
+  #          allowedIPs = [ "0.0.0.0/0" "::/0" ];
+  #          endpoint = "34.58.191.62:51820";
+  #          persistentKeepalive = 25;
+  #        }
+  #      ];
+  #    };
+  #  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

@@ -1,7 +1,5 @@
 {
-  config,
   pkgs ? import <nixpkgs> { },
-  lib,
   ...
 }:
 let
@@ -12,7 +10,7 @@ let
   };
 in
 {
-  imports = [ ./myModules.nix ];
+  # imports = [ ./myModules.nix ];
 
   # Enable the X11 windowing system.
   # services.xserver.enable = true;
