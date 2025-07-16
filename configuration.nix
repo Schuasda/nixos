@@ -16,6 +16,7 @@
   imports = [
     # Include the results of the hardware scan.
     <nixos-hardware/framework/16-inch/7040-amd>
+    <home-manager/nixos>
     ./hardware-configuration.nix
 
     ./myModules.nix
@@ -24,6 +25,8 @@
     # ./kde.nix
 
     ./packages.nix
+    
+    ./home.nix
   ];
 
   # Bootloader.
@@ -281,7 +284,7 @@
       "docker"
     ];
   };
-
+  
   # Disable automatic login for the user.
   services.displayManager.autoLogin = {
     enable = false;
