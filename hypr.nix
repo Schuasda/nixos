@@ -58,6 +58,7 @@ in
     rofi-wayland
     nautilus
     kdePackages.dolphin
+    nwg-displays
 
     # ml4w packages
     hyprshade
@@ -89,6 +90,7 @@ in
     wl-clipboard
     unstable.yay
     pacman
+    killall
 
     # hyprland plugins
     hyprlandPlugins.hyprspace

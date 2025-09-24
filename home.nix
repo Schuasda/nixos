@@ -309,6 +309,7 @@ in
         };
         interactiveShellInit = ''
           set fish_greeting # Disable greeting
+          eval (zellij setup --generate-auto-start fish | string collect)
         '';
         plugins = [
           {
