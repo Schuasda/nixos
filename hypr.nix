@@ -14,37 +14,79 @@ in
 
   # Enable Hyprland Desktop Environment.
 
- # services.displayManager.sddm.enable = true;
- # services.displayManager.sddm.wayland.enable = true;
+  # services.displayManager.sddm.enable = true;
+  # services.displayManager.sddm.wayland.enable = true;
 
   programs.hyprland = {
     enable = true;
-    # package = unstable.hyprland;
+    package = unstable.hyprland;
     withUWSM = true; # recommended for most users
-    xwayland.enable = true; # Xwayland can be disabled.
+    # xwayland.enable = true; # Xwayland can be disabled.
+  };
+  programs.uwsm = {
+    enable = true;
+    waylandCompositors = {
+      hyprland = {
+        prettyName = "Hyprland";
+        comment = "Hyprland compositor managed by UWSM";
+        binPath = "/run/current-system/sw/bin/Hyprland";
+      };
+    };
   };
 
   services.gnome.gnome-keyring.enable = true;
+  programs.seahorse.enable = true; # enable the graphical frontend for managing
 
-   programs.hyprlock = {
-     enable = true;
-     package = unstable.hyprlock;
-   };
-   services.hypridle = {
-     enable = true;
-     package = unstable.hypridle;
-   };
+  security.pam.services = {
+    greetd.enableGnomeKeyring = true;
+    greetd-password.enableGnomeKeyring = true;
+    login.enableGnomeKeyring = true;
+  };
 
-   xdg.portal = {
-     enable = true;
-     extraPortals = [
-       pkgs.kdePackages.xdg-desktop-portal-kde
-       pkgs.xdg-desktop-portal
-       # pkgs.xdg-desktop-portal-hyprland
-     ];
-   };
+  services.dbus.packages = [
+    pkgs.gnome-keyring
+    pkgs.gcr
+  ];
+
+  services.xserver.displayManager.sessionCommands = ''
+    eval $(gnome-keyring-daemon --start --daemonize --components=ssh,secrets)
+    export SSH_AUTH_SOCK
+  '';
+
+  systemd.packages = with pkgs; [
+    hyprpolkitagent
+    swaynotificationcenter
+  ];
+
+  systemd.user.services.hyprpolkitagent = {
+    wantedBy = [ "graphical-session.target" ];
+    wants = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
+  };
+
+  programs.hyprlock = {
+    enable = true;
+    package = unstable.hyprlock;
+  };
+
+  services.hypridle = {
+    enable = true;
+    package = unstable.hypridle;
+  };
+
+  # xdg.portal = {
+  #   enable = true;
+  #   extraPortals = [
+  #     # pkgs.kdePackages.xdg-desktop-portal-kde
+  #     # pkgs.xdg-desktop-portal
+  #     # pkgs.xdg-desktop-portal-hyprland
+  #   ];
+  #   # configPackages = [ pkgs.xdg-desktop-portal-hyprland ];
+  #   # config.common.default = "*";
+  # };
 
   deskenv.packages = with pkgs; [
+    unstable.hyprland
     hyprpaper
     # hyprgui
     waybar
@@ -91,10 +133,6 @@ in
     unstable.yay
     pacman
     killall
-
-    # hyprland plugins
-    hyprlandPlugins.hyprspace
-    unstable.hyprlandPlugins.hyprtrails
   ];
 
   fonts.packages = with pkgs; [

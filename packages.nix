@@ -15,7 +15,6 @@ in
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     neovim
-    nixfmt-rfc-style
     zoxide
     wget
     zip

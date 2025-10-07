@@ -25,7 +25,7 @@
     # ./kde.nix
 
     ./packages.nix
-    
+
     ./home.nix
   ];
 
@@ -46,16 +46,16 @@
       efiSupport = true;
       enable = true;
       # set $FS_UUID to the UUID of the EFI partition
-      #      extraEntries = ''
-      #        menuentry "Windows" {
-      #          insmod part_gpt
-      #          insmod fat
-      #          insmod search_fs_uuid
-      #          insmod chain
-      #          search --fs-uuid --set=root $FS_UUID
-      #          chainloader /EFI/Microsoft/Boot/bootmgfw.efi
-      #        }
-      #      '';
+      extraEntries = ''
+        menuentry "Windows" {
+          insmod part_gpt
+          insmod fat
+          insmod search_fs_uuid
+          insmod chain
+          search --fs-uuid --set=root $FS_UUID
+          chainloader /EFI/Microsoft/Boot/bootmgfw.efi
+        }
+      '';
     };
   };
 
@@ -112,18 +112,18 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
-#  networking.nameservers = [ "1.1.1.1#one.one.one.one" "1.0.0.1#one.one.one.one" ];
-#
-#  services.resolved = {
-#    enable = true;
-#    dnssec = "true";
-#    domains = [ "~." ];
-#    fallbackDns = [
-#      "1.1.1.1#one.one.one.one"
-#      "1.0.0.1#one.one.one.one"
-#    ];
-#    dnsovertls = "true";
-#  };
+  #  networking.nameservers = [ "1.1.1.1#one.one.one.one" "1.0.0.1#one.one.one.one" ];
+  #
+  #  services.resolved = {
+  #    enable = true;
+  #    dnssec = "true";
+  #    domains = [ "~." ];
+  #    fallbackDns = [
+  #      "1.1.1.1#one.one.one.one"
+  #      "1.0.0.1#one.one.one.one"
+  #    ];
+  #    dnsovertls = "true";
+  #  };
 
   # Enable bluetooth
   hardware.bluetooth = {
@@ -284,7 +284,7 @@
       "docker"
     ];
   };
-  
+
   # Disable automatic login for the user.
   services.displayManager.autoLogin = {
     enable = false;
@@ -309,7 +309,7 @@
   };
 
   environment.localBinInPath = true;
-  
+
   environment.shellAliases = {
     ll = "ls -l";
     la = "ls -la";
@@ -342,56 +342,18 @@
     enable = true;
     allowedUDPPorts = [ 51820 ]; # Clients and peers can use the same port, see listenport
     allowedTCPPortRanges = [
-      #      {
-      #        from = 1714;
-      #        to = 1764;
-      #      } # KDE Connect
-      #    ];
-      #    allowedUDPPortRanges = [
-      #      {
-      #        from = 1714;
-      #        to = 1764;
-      #      } # KDE Connect
+      {
+        from = 1714;
+        to = 1764;
+      } # KDE Connect
+    ];
+    allowedUDPPortRanges = [
+      {
+        from = 1714;
+        to = 1764;
+      } # KDE Connect
     ];
   };
-
-  # Enable WireGuard
-  #  networking.wireguard.interfaces = {
-  #    # "wg0" is the network interface name. You can name the interface arbitrarily.
-  #    kicc = {
-  #      # Determines the IP address and subnet of the client's end of the tunnel interface.
-  #      ips = [ "10.166.184.4/24" ];
-  #      listenPort = 51820; # to match firewall allowedUDPPorts (without this wg uses random port numbers)
-  #
-  #      # Path to the private key file.
-  #      #
-  #      # Note: The private key can also be included inline via the privateKey option,
-  #      # but this makes the private key world-readable; thus, using privateKeyFile is
-  #      # recommended.
-  #      privateKey = "yMYuXITYoovdwElGdCNh3aGDtsLE6iBrjDNPlHEpnG8=";
-  #
-  #      peers = [
-  #        # For a client configuration, one peer entry fodoxygenr the server will suffice.
-  #
-  #        {
-  #          # Public key of the server (not a file path).
-  #          publicKey = "3n2NEuxobCL9ihAt1o32dngc1t3WeZRxiQLNppAhthI=";
-  #
-  #          presharedKey = "KzvBEH0nZHI1mmwWwgXTb4WR0ycP5c4iVxXcBrnQyKA=";
-  #          # Forward all the traffic via VPN.
-  #          allowedIPs = [ "0.0.0.0/0" ];
-  #          # Or forward only particular subnets
-  #          #allowedIPs = [ "10.100.0.1" "91.108.12.0/22" ];
-  #
-  #          # Set this to the server IP and port.
-  #          endpoint = "34.58.191.62:51820"; # ToDo: route to endpoint not automatically configured https://wiki.archlinux.org/index.php/WireGuard#Loop_routing https://discourse.nixos.org/t/solved-minimal-firewall-setup-for-wireguard-client/7577
-  #
-  #          # Send keepalives every 25 seconds. Important to keep NAT tables alive.
-  #          persistentKeepalive = 25;
-  #        }
-  #      ];
-  #    };
-  #  };
 
   networking.wg-quick.interfaces.kicc = {
     configFile = "/home/schuasda/kicc.conf";
@@ -399,24 +361,6 @@
     autostart = false;
 
   };
-
-  #  networking.wg-quick.interfaces = {
-  #    kicc = {
-  #      address = [ "10.166.184.4/24" ];
-  #      dns = [ "10.166.184.1" ];
-  #      privateKeyFile = "yMYuXITYoovdwElGdCNh3aGDtsLE6iBrjDNPlHEpnG8=";
-  #
-  #      peers = [
-  #        {
-  #          publicKey = "3n2NEuxobCL9ihAt1o32dngc1t3WeZRxiQLNppAhthI=";
-  #          presharedKey = "KzvBEH0nZHI1mmwWwgXTb4WR0ycP5c4iVxXcBrnQyKA=";
-  #          allowedIPs = [ "0.0.0.0/0" "::/0" ];
-  #          endpoint = "34.58.191.62:51820";
-  #          persistentKeepalive = 25;
-  #        }
-  #      ];
-  #    };
-  #  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

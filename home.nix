@@ -6,8 +6,17 @@ let
       allowUnfree = true;
     };
   };
+  mytex = import ./tex.nix { inherit pkgs; };
+
+  tex = (
+    pkgs.texlive.combine {
+      inherit (pkgs.texlive) scheme-full;
+      inherit (mytex) latex-oth;
+    }
+  );
 in
 {
+
   home-manager = {
     backupFileExtension = "backup";
     users.schuasda = {
@@ -68,6 +77,7 @@ in
         discord
         spotify
         unstable.vscode-fhs
+        unstable.vscodium
         #unstable.devenv
         direnv
         uv
@@ -77,6 +87,7 @@ in
         libGLU
         freeglut
         mesa
+        tex
 
         uutils-coreutils-noprefix
         dust
@@ -104,10 +115,10 @@ in
         just
         gittyup
         insomnia
-        texliveFull
         bitwarden
         unstable.prusa-slicer
         unstable.orca-slicer
+        inkscape
 
         libreoffice-qt
         hunspell
@@ -129,7 +140,7 @@ in
         vlc
         obs-studio
         ungoogled-chromium
-        unstable.floorp
+        # unstable.floorp
         unstable.ladybird
         openfortivpn
         qalculate-qt
@@ -307,9 +318,17 @@ in
         shellAbbrs = {
           gs = "git status";
         };
-        interactiveShellInit = ''
+
+        shellInit = ''
           set fish_greeting # Disable greeting
-          eval (zellij setup --generate-auto-start fish | string collect)
+        '';
+        loginShellInit = ''
+          if uwsm check may-start && uwsm select and begin
+              exec uwsm start default
+          end
+        '';
+        interactiveShellInit = ''
+          # eval (zellij setup --generate-auto-start fish | string collect)
         '';
         plugins = [
           {
@@ -370,6 +389,29 @@ in
         package = pkgs.nextcloud-client;
       };
 
+      wayland.windowManager.hyprland = {
+        enable = true;
+        package = builtins.null;
+
+        plugins = [
+          unstable.hyprlandPlugins.hyprexpo
+          unstable.hyprlandPlugins.hyprscrolling
+        ];
+        extraConfig = ''
+          ${builtins.readFile /home/schuasda/dotfiles/.config/hypr/hyprland.conf.backup}
+        '';
+      };
+
+      xdg.portal.config.common.default = "*";
+
+      # programs.texlive = {
+      #   enable = true;
+      #   packageSet = tex;
+      #   # extraPackages = tex;
+      # };
+
+      programs.tex-fmt.enable = true;
+
       # Enable and configure Steam
       #  programs.steam = {
       #    enable = true;
@@ -416,6 +458,8 @@ in
         #   org.gradle.console=verbose
         #   org.gradle.daemon.idletimeout=3600000
         # '';
+
+        # ".local/share/texmf".source = /home/schuasda/Dokumente/OTH/Sonstiges/OTH_R_tex/texmf_OTHR;
       };
 
       # Home Manager can also manage your environment variables through
