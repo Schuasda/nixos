@@ -4,9 +4,9 @@ let
     name = "latex-oth";
     src = /home/schuasda/Dokumente/OTH/Sonstiges/OTH_R_tex/texmf_OTHR;
     installPhase = ''
-      mkdir -p $out/share/texmf
-      cp -r $src/* $out/share/texmf/
-      if command -v texhash >/dev/null 2>&1; then texhash $out/share/texmf || true; fi
+      # mkdir -p $out
+      cp -r $src $out
+      # if command -v texhash >/dev/null 2>&1; then texhash $out/share/texmf || true; fi
     '';
     passthru = {
       tlType = "run";

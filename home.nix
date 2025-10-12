@@ -16,7 +16,6 @@ let
   );
 in
 {
-
   home-manager = {
     backupFileExtension = "backup";
     users.schuasda = {
@@ -68,6 +67,7 @@ in
           '';
         })
         zapzap
+        # unstable.whatsapp-electron
         element-desktop
         zulip
         zoom-us
@@ -157,7 +157,7 @@ in
         })
         protonup-qt
         unstable.wineWowPackages.stable
-
+        bottles
       ];
 
       # Enable git
@@ -405,8 +405,13 @@ in
       xdg.portal.config.common.default = "*";
 
       # programs.texlive = {
-      #   enable = true;
-      #   packageSet = tex;
+        # enable = true;
+      #   packageSet = (
+      #     pkgs.texlive.combine {
+      #       inherit (pkgs.texlive) scheme-full;
+      #       inherit (mytex) latex-oth;
+      #     }
+      #   );
       #   # extraPackages = tex;
       # };
 
