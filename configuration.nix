@@ -61,11 +61,6 @@
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
 
-  services.displayManager.sddm = {
-    enable = false;
-    wayland.enable = true;
-  };
-
   services.logrotate.checkConfig = false;
 
   # Enable auto upgrade
@@ -285,10 +280,17 @@
     ];
   };
 
+  services.getty.autologinUser = "schuasda";
+
   # Disable automatic login for the user.
-  services.displayManager.autoLogin = {
+  services.displayManager.sddm = {
     enable = false;
-    user = "schuasda";
+    wayland.enable = true;
+
+    # autoLogin = {
+    #   enable = false;
+    #   user = "schuasda";
+    # };
   };
 
   # Prevent wake up in backpack

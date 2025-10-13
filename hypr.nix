@@ -21,7 +21,7 @@ in
     enable = true;
     package = unstable.hyprland;
     withUWSM = true; # recommended for most users
-    # xwayland.enable = true; # Xwayland can be disabled.
+    xwayland.enable = true; # Xwayland can be disabled.
   };
   programs.uwsm = {
     enable = true;

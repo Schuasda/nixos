@@ -145,7 +145,6 @@ in
         openfortivpn
         qalculate-qt
         unstable.rquickshare
-        fastfetch
 
         (lutris.override {
           extraLibraries = pkgs: [
@@ -158,6 +157,15 @@ in
         protonup-qt
         unstable.wineWowPackages.stable
         bottles
+
+        (pkgs.writeShellApplication {
+          name = "ns";
+          runtimeInputs = with pkgs; [
+            fzf
+            nix-search-tv
+          ];
+          text = builtins.readFile "${pkgs.nix-search-tv.src}/nixpkgs.sh";
+        })
       ];
 
       # Enable git
@@ -207,6 +215,10 @@ in
           # Create the file custom.conf in ~/.config/kitty to overwrite the default configuration
           include ./custom.conf
         '';
+      };
+
+      programs.fastfetch = {
+        enable = true;
       };
 
       programs.ripgrep = {
@@ -319,16 +331,27 @@ in
           gs = "git status";
         };
 
+        # profileExtra = ''
+        #   if [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
+        #     exec uwsm start -S hyprland-uwsm.desktop
+        #   fi
+        # '';
+
         shellInit = ''
           set fish_greeting # Disable greeting
         '';
         loginShellInit = ''
-          if uwsm check may-start && uwsm select and begin
-              exec uwsm start default
+          # if uwsm check may-start && uwsm select and begin
+          #     exec uwsm start default
+          # end
+          if [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" = 1 ]
+            exec uwsm start -S hyprland-uwsm.desktop
+            hyprlock
           end
         '';
         interactiveShellInit = ''
           # eval (zellij setup --generate-auto-start fish | string collect)
+          fastfetch 
         '';
         plugins = [
           {
@@ -405,7 +428,7 @@ in
       xdg.portal.config.common.default = "*";
 
       # programs.texlive = {
-        # enable = true;
+      # enable = true;
       #   packageSet = (
       #     pkgs.texlive.combine {
       #       inherit (pkgs.texlive) scheme-full;
