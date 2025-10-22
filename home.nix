@@ -175,6 +175,18 @@ in
         #TODO: config
       };
 
+      programs.neovim = {
+        enable = true;
+        plugins = with pkgs.vimPlugins; [
+          telescope-nvim
+          telescope-zoxide
+        ];
+        #package = unstable.neovim-nightly;
+        # extraConfig = ''
+        #   set number
+        # '';
+      };
+
       programs.kitty = {
         enable = true;
         package = unstable.kitty;

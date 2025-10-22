@@ -122,7 +122,7 @@ in
     nwg-look
     figlet
     gnused
-    vim
+    # vim
     xdg-user-dirs
     xdg-user-dirs-gtk
     brightnessctl
