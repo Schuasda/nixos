@@ -213,6 +213,21 @@
     #media-session.enable = true;
   };
 
+  security.polkit.extraConfig = ''
+    // Allow users in the 'plugdev' group to mount hardware devices without authentication
+    // in headless (non-active console) sessions.
+    // Change the plugdev group name to what you want.
+    polkit.addRule(function(action, subject) {
+        if ((action.id == "org.freedesktop.udisks2.filesystem-mount" ||
+             action.id == "org.freedesktop.udisks2.filesystem-mount-system" ||
+             action.id == "org.freedesktop.udisks2.filesystem-mount-other-seat") &&
+            subject.isInGroup("plugdev"))
+        {
+            return polkit.Result.YES;
+        }
+    });
+  '';
+
   # security = {
   #   pam.services.kwallet = {
   #     name = "kwallet";
@@ -277,6 +292,7 @@
       "gamemode"
       "wireshark"
       "docker"
+      "plugdev"
     ];
   };
 
@@ -318,6 +334,8 @@
   };
 
   programs.nix-ld.enable = true;
+
+  services.gvfs.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

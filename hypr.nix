@@ -34,12 +34,16 @@ in
     };
   };
 
-  services.gnome.gnome-keyring.enable = true;
+  services.gnome = {
+    gnome-keyring.enable = true;
+    # Gnome online accounts (Google Drive, Nextcloud, etc.)
+    gnome-online-accounts.enable = true;
+  };
   programs.seahorse.enable = true; # enable the graphical frontend for managing
 
   security.pam.services = {
-    greetd.enableGnomeKeyring = true;
-    greetd-password.enableGnomeKeyring = true;
+    # greetd.enableGnomeKeyring = true;
+    # greetd-password.enableGnomeKeyring = true;
     login.enableGnomeKeyring = true;
   };
 

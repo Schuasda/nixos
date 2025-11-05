@@ -56,6 +56,9 @@ in
         pkgs.nixd
         pkgs.nomacs
         pkgs.doxygen_gui
+        glib
+        gnome-control-center
+        gnome.gvfs
 
         #signal-desktop
         (pkgs.symlinkJoin {
@@ -72,7 +75,7 @@ in
         zulip
         zoom-us
         gnucash
-        nextcloud-client
+        # nextcloud-client
         synology-drive-client
         discord
         spotify
@@ -146,7 +149,9 @@ in
         qalculate-qt
         unstable.rquickshare
 
-        (lutris.override {
+        prismlauncher
+
+        (unstable.lutris.override {
           extraLibraries = pkgs: [
 
           ];
@@ -260,6 +265,8 @@ in
         enable = true;
         enableFishIntegration = true;
         enableBashIntegration = true;
+
+        #attachExistingSession = true;
       };
 
       programs.ncspot = {
@@ -274,6 +281,7 @@ in
         initLua = /home/schuasda/dotfiles/yazi/init.lua;
         plugins = {
           git = pkgs.yaziPlugins.git;
+          lazygit = pkgs.yaziPlugins.lazygit;
           mount = pkgs.yaziPlugins.mount;
         };
         settings = {
@@ -315,7 +323,67 @@ in
           mgr.prepend_keymap = [
             {
               run = "plugin mount";
-              on = "M";
+              on = [
+                "M"
+                "x"
+              ];
+              desc = "Mount external filesystems";
+            }
+            {
+              run = "plugin gvfs -- select-then-mount ";
+              on = [
+                "M"
+                "m"
+              ];
+              desc = "Mount with GVFS";
+            }
+            {
+              run = "plugin gvfs -- select-then-mount --jump";
+              on = [
+                "M"
+                "M"
+              ];
+              desc = "Mount and jump with GVFS";
+            }
+            {
+              on = [
+                "M"
+                "a"
+              ];
+              run = "plugin gvfs -- add-mount";
+              desc = "Add a GVFS mount URI";
+            }
+            {
+              on = [
+                "M"
+                "u"
+              ];
+              run = "plugin gvfs -- select-then-unmount --eject";
+              desc = "Select device then eject";
+            }
+            {
+              on = [
+                "M"
+                "e"
+              ];
+              run = "plugin gvfs -- edit-mount";
+              desc = "Edit a GVFS mount URI";
+            }
+            {
+              on = [
+                "M"
+                "r"
+              ];
+              run = "plugin gvfs -- remove-mount";
+              desc = "Remove a GVFS mount URI";
+            }
+            {
+              on = [
+                "g"
+                "m"
+              ];
+              run = "plugin gvfs -- jump-to-device";
+              desc = "Select device then jump to its mount point";
             }
           ];
         };
@@ -338,32 +406,22 @@ in
 
       programs.fish = {
         enable = true;
-        #shellInit = "zoxide init fish | source";
         shellAbbrs = {
           gs = "git status";
         };
-
-        # profileExtra = ''
-        #   if [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
-        #     exec uwsm start -S hyprland-uwsm.desktop
-        #   fi
-        # '';
 
         shellInit = ''
           set fish_greeting # Disable greeting
         '';
         loginShellInit = ''
-          # if uwsm check may-start && uwsm select and begin
-          #     exec uwsm start default
-          # end
           if [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" = 1 ]
-            exec uwsm start -S hyprland-uwsm.desktop
-            hyprlock
+            exec uwsm start -S hyprland-uwsm.desktop 
           end
         '';
         interactiveShellInit = ''
-          # eval (zellij setup --generate-auto-start fish | string collect)
-          fastfetch 
+          if [ "$TERM" = "xterm-kitty" ] 
+            alias ssh="TERM=xterm-256color command ssh"
+          end
         '';
         plugins = [
           {
@@ -396,16 +454,6 @@ in
           }
         ];
       };
-      #  programs.bash = {
-      #    initExtra = ''
-      #      	    if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
-      #      	    then
-      #      	      shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
-      #      	      exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
-      #      	    fi
-      #      	  '';
-      #
-      #  };
 
       services.kdeconnect = {
         enable = true;
@@ -515,6 +563,7 @@ in
       #
       home.sessionVariables = {
         # EDITOR = "emacs";
+        XDG_RUNTIME_DIR = "/run/user/$UID";
       };
 
       # Let Home Manager install and manage itself.

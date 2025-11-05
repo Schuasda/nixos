@@ -34,6 +34,7 @@ in
 
     mesa
     libGLU
+    libsecret
   ];
 
   nixpkgs.config.permittedInsecurePackages = [
