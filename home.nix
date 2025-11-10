@@ -562,7 +562,7 @@ in
       #  /etc/profiles/per-user/schuasda/etc/profile.d/hm-session-vars.sh
       #
       home.sessionVariables = {
-        # EDITOR = "emacs";
+        EDITOR = "nvim";
         XDG_RUNTIME_DIR = "/run/user/$UID";
       };
 

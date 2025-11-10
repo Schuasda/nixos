@@ -81,12 +81,8 @@ in
   # xdg.portal = {
   #   enable = true;
   #   extraPortals = [
-  #     # pkgs.kdePackages.xdg-desktop-portal-kde
-  #     # pkgs.xdg-desktop-portal
-  #     # pkgs.xdg-desktop-portal-hyprland
+  #       pkgs.xdg-desktop-portal-gnome
   #   ];
-  #   # configPackages = [ pkgs.xdg-desktop-portal-hyprland ];
-  #   # config.common.default = "*";
   # };
 
   deskenv.packages = with pkgs; [
