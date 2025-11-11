@@ -332,6 +332,14 @@
         keymap = {
           mgr.prepend_keymap = [
             {
+              run = "plugin lazygit";
+              on = [
+                "g"
+                "i"
+              ];
+              desc = "run lazygit";
+            }
+            {
               run = "plugin mount";
               on = [
                 "M"
