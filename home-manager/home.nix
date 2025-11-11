@@ -184,6 +184,12 @@
         #TODO: config
       };
 
+      programs.lazygit = {
+        enable = true;
+        # enableFishIntegration = true;
+        package = pkgs.unstable.lazygit;
+      };
+
       programs.vscode = {
         enable = true;
         package = pkgs.unstable.vscodium-fhs;
