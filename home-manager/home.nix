@@ -1,21 +1,27 @@
-{ pkgs, ... }:
-
-let
-  unstable = import <unstable> {
-    config = {
-      allowUnfree = true;
-    };
-  };
-  mytex = import ./tex.nix { inherit pkgs; };
-
-  tex = (
-    pkgs.texlive.combine {
-      inherit (pkgs.texlive) scheme-full;
-      inherit (mytex) latex-oth;
-    }
-  );
-in
 {
+  inputs,
+  outputs,
+  pkgs,
+  ...
+}:
+
+# let
+# unstable = import <unstable> {
+#   config = {
+#     allowUnfree = true;
+#   };
+# };
+# mytex = import ./tex.nix { inherit pkgs; };
+
+# tex = (
+#   pkgs.texlive.combine {
+#     inherit (pkgs.texlive) scheme-full;
+#     inherit (mytex) latex-oth;
+#   }
+# );
+# in
+{
+  nixpkgs.overlays = [ outputs.overlays.unstable-packages ];
   home-manager = {
     backupFileExtension = "backup";
     users.schuasda = {
@@ -60,7 +66,6 @@ in
         gnome-control-center
         gnome.gvfs
 
-        #signal-desktop
         (pkgs.symlinkJoin {
           name = "signal-desktop";
           paths = [ pkgs.signal-desktop ];
@@ -70,27 +75,26 @@ in
           '';
         })
         zapzap
-        # unstable.whatsapp-electron
         element-desktop
         zulip
         zoom-us
         gnucash
-        # nextcloud-client
         synology-drive-client
         discord
         spotify
-        unstable.vscode-fhs
-        unstable.vscodium
-        #unstable.devenv
+
+        # unstable.vscodium
+
+        unstable.devenv
         direnv
         uv
-        unstable.godot_4
+        # unstable.godot_4
         google-cloud-sdk
         gnumake
         libGLU
         freeglut
         mesa
-        tex
+        # tex
 
         uutils-coreutils-noprefix
         dust
@@ -147,11 +151,11 @@ in
         unstable.ladybird
         openfortivpn
         qalculate-qt
-        unstable.rquickshare
+        rquickshare
 
         prismlauncher
 
-        (unstable.lutris.override {
+        (lutris.override {
           extraLibraries = pkgs: [
 
           ];
@@ -160,7 +164,7 @@ in
           ];
         })
         protonup-qt
-        unstable.wineWowPackages.stable
+        wineWowPackages.stable
         bottles
 
         (pkgs.writeShellApplication {
@@ -180,13 +184,19 @@ in
         #TODO: config
       };
 
+      programs.vscode = {
+        enable = true;
+        package = pkgs.unstable.vscodium-fhs;
+      };
+
       programs.neovim = {
         enable = true;
+        defaultEditor = true;
         plugins = with pkgs.vimPlugins; [
           telescope-nvim
           telescope-zoxide
         ];
-        #package = unstable.neovim-nightly;
+        # package = unstable.neovim-nightly;
         # extraConfig = ''
         #   set number
         # '';
@@ -194,7 +204,7 @@ in
 
       programs.kitty = {
         enable = true;
-        package = unstable.kitty;
+        package = pkgs.unstable.kitty;
         shellIntegration.enableFishIntegration = true;
 
         font = {
@@ -275,10 +285,10 @@ in
 
       programs.yazi = {
         enable = true;
-        package = unstable.yazi;
+        package = pkgs.unstable.yazi;
         enableFishIntegration = true;
         shellWrapperName = "y";
-        initLua = /home/schuasda/dotfiles/yazi/init.lua;
+        initLua = ./init.lua;
         plugins = {
           git = pkgs.yaziPlugins.git;
           lazygit = pkgs.yaziPlugins.lazygit;
@@ -477,11 +487,11 @@ in
         package = builtins.null;
 
         plugins = [
-          unstable.hyprlandPlugins.hyprexpo
-          unstable.hyprlandPlugins.hyprscrolling
+          inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprexpo
+          inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprscrolling
         ];
         extraConfig = ''
-          ${builtins.readFile /home/schuasda/dotfiles/.config/hypr/hyprland.conf.backup}
+          ${builtins.readFile ./hyprland.conf}
         '';
       };
 
@@ -498,40 +508,7 @@ in
       #   # extraPackages = tex;
       # };
 
-      programs.tex-fmt.enable = true;
-
-      # Enable and configure Steam
-      #  programs.steam = {
-      #    enable = true;
-      #    protontricks.enable = true;
-      #    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-      #    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-      #  };
-
-      #  programs.gamemode = {
-      #    enable = true;
-      #    settings.general.inhibit_screensaver = 0;
-      #  };
-
-      # Enable Ausweisapp and open firewall
-      #  programs.ausweisapp = {
-      #    enable = true;
-      #    openFirewall = true;
-      #  };
-
-      #  programs.wireshark = {
-      #    enable = true;
-      #    package = pkgs.wireshark;
-      #  };
-
-      #  services.ollama = {
-      #    enable = true;
-      #    acceleration = "rocm";
-      #  };
-      #  services.open-webui = {
-      #    enable = true;
-      #    package = unstable.open-webui;
-      #  };
+      # programs.tex-fmt.enable = true;
 
       # Home Manager is pretty good at managing dotfiles. The primary way to manage
       # plain files is through 'home.file'.
@@ -547,7 +524,7 @@ in
         #   org.gradle.daemon.idletimeout=3600000
         # '';
 
-        # ".local/share/texmf".source = /home/schuasda/Dokumente/OTH/Sonstiges/OTH_R_tex/texmf_OTHR;
+        # ".local/share/texmf".source = ../Dokumente/OTH/Sonstiges/OTH_R_tex/texmf_OTHR;
       };
 
       # Home Manager can also manage your environment variables through

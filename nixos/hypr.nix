@@ -1,14 +1,15 @@
 {
+  inputs,
   pkgs ? import <nixpkgs> { },
   ...
 }:
-let
-  unstable = import <unstable> {
-    config = {
-      allowUnfree = true;
-    };
-  };
-in
+# let
+#   unstable = import <unstable> {
+#     config = {
+#       allowUnfree = true;
+#     };
+#   };
+# in
 {
   # imports = [ ./myModules.nix ];
 
@@ -19,7 +20,8 @@ in
 
   programs.hyprland = {
     enable = true;
-    package = unstable.hyprland;
+    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     withUWSM = true; # recommended for most users
     xwayland.enable = true; # Xwayland can be disabled.
   };
@@ -70,12 +72,12 @@ in
 
   programs.hyprlock = {
     enable = true;
-    package = unstable.hyprlock;
+    package = inputs.hyprlock.packages.${pkgs.stdenv.hostPlatform.system}.hyprlock;
   };
 
   services.hypridle = {
     enable = true;
-    package = unstable.hypridle;
+    package = inputs.hypridle.packages.${pkgs.stdenv.hostPlatform.system}.hypridle;
   };
 
   # xdg.portal = {
@@ -86,7 +88,6 @@ in
   # };
 
   deskenv.packages = with pkgs; [
-    unstable.hyprland
     hyprpaper
     # hyprgui
     waybar
@@ -130,7 +131,7 @@ in
     jq
     polkit_gnome
     wl-clipboard
-    unstable.yay
+    # unstable.yay
     pacman
     killall
   ];

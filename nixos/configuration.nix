@@ -1,9 +1,9 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 {
-  pkgs ? import <nixpkgs> { },
+  inputs,
+  # outputs,
+  # lib,
+  # config,
+  pkgs,
   ...
 }:
 {
@@ -11,23 +11,35 @@
     experimental-features = [ "nix-command flakes" ];
     trusted-users = [ "schuasda" ];
 
+    substituters = ["https://hyprland.cachix.org"];
+    trusted-substituters = ["https://hyprland.cachix.org"];
+    trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
   };
 
   imports = [
     # Include the results of the hardware scan.
-    <nixos-hardware/framework/16-inch/7040-amd>
-    <home-manager/nixos>
+    # <nixos-hardware/framework/16-inch/7040-amd>
+    # <home-manager/nixos>
     ./hardware-configuration.nix
 
-    ./myModules.nix
+    ../modules/nixos/default.nix
 
     ./hypr.nix
     # ./kde.nix
 
     ./packages.nix
 
-    ./home.nix
+    ../home-manager/home.nix
+    inputs.home-manager.nixosModules.home-manager
   ];
+
+  # home-manager = {
+  #   extraSpecialArgs = { inherit inputs outputs; };
+  #   users = {
+  #     # Import your home-manager configuration
+  #     schuasda = import ../home-manager/home.nix;
+  #   };
+  # };
 
   # Bootloader.
   boot.loader = {
@@ -375,12 +387,12 @@
     ];
   };
 
-  networking.wg-quick.interfaces.kicc = {
-    configFile = "/home/schuasda/kicc.conf";
+  # networking.wg-quick.interfaces.kicc = {
+  #   configFile = "/home/schuasda/kicc.conf";
 
-    autostart = false;
+  #   autostart = false;
 
-  };
+  # };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

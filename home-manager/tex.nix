@@ -2,7 +2,7 @@
 let
   latex-oth = pkgs.stdenvNoCC.mkDerivation {
     name = "latex-oth";
-    src = /home/schuasda/Dokumente/OTH/Sonstiges/OTH_R_tex/texmf_OTHR;
+    src = ./texmf_OTHR;
     installPhase = ''
       # mkdir -p $out
       cp -r $src $out
