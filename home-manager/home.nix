@@ -5,21 +5,21 @@
   ...
 }:
 
-# let
+let
 # unstable = import <unstable> {
 #   config = {
 #     allowUnfree = true;
 #   };
 # };
-# mytex = import ./tex.nix { inherit pkgs; };
+mytex = import ./tex.nix { inherit pkgs; };
 
-# tex = (
-#   pkgs.texlive.combine {
-#     inherit (pkgs.texlive) scheme-full;
-#     inherit (mytex) latex-oth;
-#   }
-# );
-# in
+tex = (
+  pkgs.texlive.combine {
+    inherit (pkgs.texlive) scheme-full;
+    inherit (mytex) latex-oth;
+  }
+);
+in
 {
   nixpkgs.overlays = [ outputs.overlays.unstable-packages ];
   home-manager = {
@@ -94,7 +94,7 @@
         libGLU
         freeglut
         mesa
-        # tex
+        tex
 
         uutils-coreutils-noprefix
         dust
@@ -193,6 +193,7 @@
       programs.vscode = {
         enable = true;
         package = pkgs.unstable.vscodium-fhs;
+        
       };
 
       programs.neovim = {
@@ -522,7 +523,7 @@
       #   # extraPackages = tex;
       # };
 
-      # programs.tex-fmt.enable = true;
+      programs.tex-fmt.enable = true;
 
       # Home Manager is pretty good at managing dotfiles. The primary way to manage
       # plain files is through 'home.file'.
