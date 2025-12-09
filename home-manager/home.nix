@@ -22,6 +22,8 @@ let
   );
 in
 {
+  # imports = [inputs.lazyvim.homeManagerModules.default];
+
   nixpkgs.overlays = [ outputs.overlays.unstable-packages ];
   home-manager = {
     backupFileExtension = "backup";
@@ -75,6 +77,7 @@ in
             wrapProgram $out/bin/signal-desktop --add-flags --password-store="gnome-keyring"
           '';
         })
+        unstable.ferdium
         zapzap
         element-desktop
         zulip
@@ -116,14 +119,15 @@ in
 
         # jetbrains.webstorm
         dbeaver-bin
-        jellyfin-media-player
+        # jellyfin-media-player
+        unstable.delfin
         nodejs
         ungit
         unstable.jujutsu
         just
         gittyup
         insomnia
-        bitwarden
+        bitwarden-desktop
         unstable.prusa-slicer
         unstable.orca-slicer
         inkscape
@@ -148,7 +152,7 @@ in
         syncthing
         vlc
         obs-studio
-        ungoogled-chromium
+        # ungoogled-chromium
         # unstable.floorp
         unstable.ladybird
         openfortivpn
@@ -169,14 +173,14 @@ in
         wineWowPackages.stable
         bottles
 
-        (pkgs.writeShellApplication {
-          name = "ns";
-          runtimeInputs = with pkgs; [
-            fzf
-            nix-search-tv
-          ];
-          text = builtins.readFile "${pkgs.nix-search-tv.src}/nixpkgs.sh";
-        })
+        # (pkgs.writeShellApplication {
+        #   name = "ns";
+        #   runtimeInputs = with pkgs; [
+        #     fzf
+        #     nix-search-tv
+        #   ];
+        #   text = builtins.readFile "${pkgs.nix-search-tv.src}/nixpkgs.sh";
+        # })
       ];
 
       # Enable git
@@ -198,14 +202,16 @@ in
 
       };
 
+      # programs.lazyvim.enable = true;
+
       programs.neovim = {
         enable = true;
         defaultEditor = true;
-        extraPackages = with pkgs; [
-          lua-language-server
-          stylua
-          ripgrep
-        ];
+        # extraPackages = with pkgs; [
+        #   lua-language-server
+        #   stylua
+        #   ripgrep
+        # ];
 
         plugins = with pkgs.vimPlugins; [
           # lazy-nvim

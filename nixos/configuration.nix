@@ -76,7 +76,7 @@
   services.logrotate.checkConfig = false;
 
   # Enable auto upgrade
-  system.autoUpgrade.enable = true;
+  # system.autoUpgrade.enable = true;
 
   virtualisation.docker.enable = true;
 
@@ -141,9 +141,6 @@
   # Enable OpenGL
   hardware.graphics = {
     enable = true;
-    extraPackages = with pkgs; [
-      amdvlk
-    ];
   };
 
   # Set your time zone.
@@ -250,42 +247,6 @@
   #   };
   # };
 
-  # Enable Mopidy msuic server
-  services.mopidy = {
-    enable = false;
-    extensionPackages = with pkgs; [
-      mopidy-local
-      mopidy-iris
-      mopidy-spotify
-      mopidy-soundcloud
-    ];
-    configuration = ''
-      		[file]
-      		enabled = true
-      		media_dirs =
-      		    home/schuasda/Music/ |Music
-      		show_dotfiles = false
-      		excluded_file_extensions =
-      		  .directory
-      		  .html
-      		  .jpeg
-      		  .jpg
-      		  .log
-      		  .nfo
-      		  .pdf
-      		  .png
-      		  .txt
-      		  .zip
-      		follow_symlinks = false
-      		metadata_timeout = 1000
-
-      		[spotify]
-      		username = simon@fonto.de	
-      		password = 
-      		client_id = 9961d79b-c6e6-49c7-80fd-e0276a840b37
-      		client_secret = O7_T_Fi4N53HAm2Q1hFrLBSo5-alIz7UOSchiM8QswA=
-      	'';
-  };
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;

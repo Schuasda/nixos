@@ -98,7 +98,7 @@
     libnotify
     # alacritty
     # unstable.kitty
-    rofi-wayland
+    rofi
     nautilus
     kdePackages.dolphin
     nwg-displays

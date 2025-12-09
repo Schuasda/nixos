@@ -1,13 +1,13 @@
 {
-  description = "Your new nix config";
+  # description = "Your new nix config";
 
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Home manager
-    home-manager.url = "github:nix-community/home-manager/release-25.05";
+    home-manager.url = "github:nix-community/home-manager/release-25.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     hm-unstable.url = "github:nix-community/home-manager/master";
@@ -30,6 +30,9 @@
       url = "github:hyprwm/hyprlock";
       # inputs.hyprland.follows = "hyprland";
     };
+
+    # LazyVim
+    # lazyvim.url = "github:pfassina/lazyvim-nix";
   };
 
   outputs =
@@ -38,6 +41,7 @@
       nixpkgs,
       # home-manager,
       nixos-hardware,
+      # lazyvim,
       ...
     }@inputs:
     let
