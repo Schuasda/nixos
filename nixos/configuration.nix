@@ -197,7 +197,10 @@
   };
 
   # Enable CUPS to print documents.
-  services.printing.enable = true;
+  services.printing = {
+    enable = true;
+    drivers = [ pkgs.gutenprint ];
+  };
   # Enable printer autodiscovery
   services.avahi = {
     enable = true;
