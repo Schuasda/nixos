@@ -7,11 +7,6 @@
 }:
 
 let
-  # unstable = import <unstable> {
-  #   config = {
-  #     allowUnfree = true;
-  #   };
-  # };
   mytex = import ./tex.nix { inherit pkgs; };
 
   tex = (
@@ -44,7 +39,7 @@ in
 
       # The home.packages option allows you to install Nix packages into your
       # environment.
-      home.packages = with pkgs; [
+      home.packages = with pkgs.unstable; [
         # # Adds the 'hello' command to your environment. It prints a friendly
         # # "Hello, world!" when run.
         # pkgs.hello
@@ -61,23 +56,23 @@ in
         # (pkgs.writeShellScriptBin "my-hello" ''
         #   echo "Hello, ${config.home.username}!"
         # '')
-        pkgs.keepassxc
-        pkgs.nixd
-        pkgs.nomacs
-        pkgs.doxygen_gui
+        keepassxc
+        nixd
+        nomacs
+        doxygen_gui
         glib
         gnome-control-center
         gnome.gvfs
 
         (pkgs.symlinkJoin {
           name = "signal-desktop";
-          paths = [ pkgs.signal-desktop ];
+          paths = [ pkgs.unstable.signal-desktop ];
           buildInputs = [ pkgs.makeWrapper ];
           postBuild = ''
             wrapProgram $out/bin/signal-desktop --add-flags --password-store="gnome-keyring"
           '';
         })
-        unstable.ferdium
+        ferdium
         zapzap
         element-desktop
         zulip
@@ -87,12 +82,12 @@ in
         discord
         spotify
 
-        # unstable.vscodium
+        # vscodium
 
-        unstable.devenv
+        devenv
         direnv
         uv
-        # unstable.godot_4
+        # godot_4
         google-cloud-sdk
         gnumake
         libGLU
@@ -105,6 +100,7 @@ in
         dua
         fzf
         docker-client
+        podman
         grc
         fusuma
         nixfmt-rfc-style
@@ -114,22 +110,22 @@ in
         zenmonitor
 
         todoist-electron
-        #unstable.planify
-        unstable.ticktick
+        #planify
+        ticktick
 
         # jetbrains.webstorm
         dbeaver-bin
         # jellyfin-media-player
-        unstable.delfin
+        delfin
         nodejs
         ungit
-        unstable.jujutsu
+        jujutsu
         just
         gittyup
         insomnia
         bitwarden-desktop
-        unstable.prusa-slicer
-        unstable.orca-slicer
+        prusa-slicer
+        orca-slicer
         inkscape
         figma-linux
 
@@ -139,7 +135,7 @@ in
         hunspellDicts.en_US-large
         hunspellDicts.en-gb-large
 
-        #unstable.davinci-resolve
+        #davinci-resolve
 
         zotero
         quickemu
@@ -153,8 +149,8 @@ in
         vlc
         obs-studio
         # ungoogled-chromium
-        # unstable.floorp
-        unstable.ladybird
+        # floorp
+        ladybird
         openfortivpn
         qalculate-qt
         rquickshare
@@ -173,14 +169,14 @@ in
         wineWowPackages.stable
         bottles
 
-        # (pkgs.writeShellApplication {
-        #   name = "ns";
-        #   runtimeInputs = with pkgs; [
-        #     fzf
-        #     nix-search-tv
-        #   ];
-        #   text = builtins.readFile "${pkgs.nix-search-tv.src}/nixpkgs.sh";
-        # })
+        (pkgs.writeShellApplication {
+          name = "ns";
+          runtimeInputs = with pkgs; [
+            fzf
+            nix-search-tv
+          ];
+          text = builtins.readFile "${pkgs.nix-search-tv.src}/nixpkgs.sh";
+        })
       ];
 
       # Enable git
@@ -587,7 +583,8 @@ in
         '';
         loginShellInit = ''
           if [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" = 1 ]
-            exec uwsm start -S hyprland-uwsm.desktop 
+            # exec uwsm start -S hyprland-uwsm.desktop 
+            exec start-hyprland
           end
         '';
         interactiveShellInit = ''
@@ -647,6 +644,7 @@ in
       wayland.windowManager.hyprland = {
         enable = true;
         package = builtins.null;
+        systemd.enable = false;
         systemd.variables = [ "--all" ];
 
         plugins = [
