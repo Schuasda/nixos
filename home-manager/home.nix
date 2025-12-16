@@ -154,6 +154,7 @@ in
         openfortivpn
         qalculate-qt
         rquickshare
+        inputs.zen-browser.packages."${stdenv.hostPlatform.system}".default
 
         prismlauncher
 

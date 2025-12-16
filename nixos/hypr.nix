@@ -3,16 +3,7 @@
   pkgs ? import <nixpkgs> { },
   ...
 }:
-# let
-#   unstable = import <unstable> {
-#     config = {
-#       allowUnfree = true;
-#     };
-#   };
-# in
 {
-  # imports = [ ./myModules.nix ];
-
   # Enable Hyprland Desktop Environment.
 
   # services.displayManager.sddm.enable = true;
@@ -87,7 +78,7 @@
   #   ];
   # };
 
-  deskenv.packages = with pkgs; [
+  deskenv.packages = with pkgs.unstable; [
     hyprpaper
     # hyprgui
     waybar
@@ -97,7 +88,7 @@
     dunst
     libnotify
     # alacritty
-    # unstable.kitty
+    # kitty
     rofi
     nautilus
     kdePackages.dolphin
@@ -129,9 +120,9 @@
     brightnessctl
     playerctl
     jq
-    polkit_gnome
+    polkit
     wl-clipboard
-    # unstable.yay
+    # yay
     pacman
     killall
   ];
