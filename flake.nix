@@ -3,11 +3,11 @@
 
   inputs = {
     # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Home manager
-    home-manager.url = "github:nix-community/home-manager/release-25.05";
+    home-manager.url = "github:nix-community/home-manager/release-25.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     hm-unstable.url = "github:nix-community/home-manager/master";
@@ -32,14 +32,14 @@
     };
 
     zen-browser = {
-    url = "github:0xc000022070/zen-browser-flake";
-    inputs = {
-      # IMPORTANT: we're using "libgbm" and is only available in unstable so ensure
-      # to have it up-to-date or simply don't specify the nixpkgs input
-      nixpkgs.follows = "nixpkgs";
-      home-manager.follows = "home-manager";
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs = {
+        # IMPORTANT: we're using "libgbm" and is only available in unstable so ensure
+        # to have it up-to-date or simply don't specify the nixpkgs input
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+      };
     };
-  };
 
     # LazyVim
     # lazyvim.url = "github:pfassina/lazyvim-nix";
@@ -49,7 +49,7 @@
     {
       self,
       nixpkgs,
-      # home-manager,
+      home-manager,
       nixos-hardware,
       # lazyvim,
       ...
@@ -90,6 +90,15 @@
           modules = [
             ./nixos/configuration.nix
             nixos-hardware.nixosModules.framework-16-7040-amd
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              # home-manager.users.jdoe = ./home-manager/home.nix;
+
+              # Optionally, use home-manager.extraSpecialArgs to pass
+              # arguments to home.nix
+            }
           ];
         };
       };

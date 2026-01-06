@@ -39,7 +39,7 @@ in
 
       # The home.packages option allows you to install Nix packages into your
       # environment.
-      home.packages = with pkgs.unstable; [
+      home.packages = with pkgs; [
         # # Adds the 'hello' command to your environment. It prints a friendly
         # # "Hello, world!" when run.
         # pkgs.hello
@@ -156,6 +156,8 @@ in
         rquickshare
         inputs.zen-browser.packages."${stdenv.hostPlatform.system}".default
 
+        gemini-cli
+
         prismlauncher
 
         (lutris.override {
@@ -170,14 +172,14 @@ in
         wineWowPackages.stable
         bottles
 
-        (pkgs.writeShellApplication {
-          name = "ns";
-          runtimeInputs = with pkgs; [
-            fzf
-            nix-search-tv
-          ];
-          text = builtins.readFile "${pkgs.nix-search-tv.src}/nixpkgs.sh";
-        })
+        # (pkgs.writeShellApplication {
+        #   name = "ns";
+        #   runtimeInputs = with pkgs; [
+        #     fzf
+        #     nix-search-tv
+        #   ];
+        #   text = builtins.readFile "${pkgs.nix-search-tv.src}/nixpkgs.sh";
+        # })
       ];
 
       # Enable git
@@ -189,7 +191,7 @@ in
 
       programs.lazygit = {
         enable = true;
-        # enableFishIntegration = true;
+        enableFishIntegration = true;
         package = pkgs.unstable.lazygit;
       };
 
@@ -393,6 +395,16 @@ in
           include ./custom.conf
         '';
       };
+
+      # programs.gemini-cli = {
+      #   enable = true;
+      #   package = pkgs.unstable.gemini-cli;
+        
+      #   settings = {
+      #     vimMode = true;
+      #     preferredEditor = "nvim";
+      #   };
+      # };
 
       programs.fastfetch = {
         enable = true;
@@ -645,12 +657,14 @@ in
       wayland.windowManager.hyprland = {
         enable = true;
         package = builtins.null;
+        portalPackage = builtins.null;
+
         systemd.enable = false;
         systemd.variables = [ "--all" ];
 
         plugins = [
-          inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprexpo
-          inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprscrolling
+          inputs.hyprland-plugins.packages.${pkgs.system}.hyprexpo
+          inputs.hyprland-plugins.packages.${pkgs.system}.hyprscrolling
         ];
         extraConfig = ''
           ${builtins.readFile ./hyprland.conf}
