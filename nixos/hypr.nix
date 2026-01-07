@@ -82,6 +82,7 @@
 
   deskenv.packages = with pkgs; [
     hyprpaper
+    swww
     # hyprgui
     waybar
     hyprpolkitagent
@@ -197,6 +198,8 @@
     power-profiles-daemon
     pywalfox-native
     vlc
+    material-icons
+    colloid-icon-theme
   ];
 
   fonts.packages = with pkgs; [

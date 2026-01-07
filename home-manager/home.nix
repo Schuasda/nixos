@@ -597,7 +597,7 @@ in
         loginShellInit = ''
           if [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" = 1 ]
             # exec uwsm start -S hyprland-uwsm.desktop 
-            exec start-hyprland
+            exec Hyprland
           end
         '';
         interactiveShellInit = ''
@@ -605,6 +605,7 @@ in
             alias ssh="TERM=xterm-256color command ssh"
           end
         '';
+
         plugins = [
           {
             name = "grc";
@@ -656,15 +657,18 @@ in
 
       wayland.windowManager.hyprland = {
         enable = true;
-        package = builtins.null;
-        portalPackage = builtins.null;
+        # package = builtins.null;
+        # portalPackage = builtins.null;
+        package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+        portalPackage =
+          inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
 
         systemd.enable = false;
         systemd.variables = [ "--all" ];
 
         plugins = [
-          inputs.hyprland-plugins.packages.${pkgs.system}.hyprexpo
-          inputs.hyprland-plugins.packages.${pkgs.system}.hyprscrolling
+          inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprexpo
+          inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprscrolling
         ];
         extraConfig = ''
           ${builtins.readFile ./hyprland.conf}
