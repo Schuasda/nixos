@@ -63,6 +63,7 @@ in
         glib
         gnome-control-center
         gnome.gvfs
+        ouch
 
         (pkgs.symlinkJoin {
           name = "signal-desktop";
@@ -399,7 +400,7 @@ in
       # programs.gemini-cli = {
       #   enable = true;
       #   package = pkgs.unstable.gemini-cli;
-        
+
       #   settings = {
       #     vimMode = true;
       #     preferredEditor = "nvim";
@@ -455,6 +456,7 @@ in
           git = pkgs.yaziPlugins.git;
           lazygit = pkgs.yaziPlugins.lazygit;
           mount = pkgs.yaziPlugins.mount;
+          ouch = pkgs.yaziPlugins.ouch;
         };
         settings = {
           opener = {
@@ -476,7 +478,26 @@ in
                 desc = "Open with Okular";
               }
             ];
+            extract = [
+              {
+                run = "ouch d -y %*";
+                desc = "Extract here with ouch";
+                for = "windows";
+              }
+              {
+                run = "ouch d -y \"$@\"";
+                desc = "Extract here with ouch";
+                for = "unix";
+              }
+            ];
           };
+          plugin.prepend_previewers = [
+            {
+              id = "ouch";
+              mime = "application/{*zip,tar,bzip2,7z*,rar,xz,zstd,java-archive}";
+              run = "ouch";
+            }
+          ];
           plugin.prepend_fetchers = [
             {
               id = "git";
