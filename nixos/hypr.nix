@@ -73,12 +73,12 @@
     package = inputs.hypridle.packages.${pkgs.stdenv.hostPlatform.system}.hypridle;
   };
 
-  # xdg.portal = {
-  #   enable = true;
-  #   extraPortals = [
-  #       pkgs.xdg-desktop-portal-gnome
-  #   ];
-  # };
+  xdg.portal = {
+    enable = true;
+    extraPortals = [
+        pkgs.xdg-desktop-portal-termfilechooser
+    ];
+  };
 
   deskenv.packages = with pkgs; [
     hyprpaper
@@ -90,45 +90,12 @@
 
     dunst
     libnotify
-    # alacritty
-    # kitty
     rofi
     nautilus
     kdePackages.dolphin
     nwg-displays
 
-    # ml4w packages
-    # hyprshade
-    # swaynotificationcenter
-    # pavucontrol
-    # blueman
-    # cliphist
-    # gum
     oh-my-posh
-    # waypaper
-    # pywal
-    # bibata-cursors
-    # papirus-icon-theme
-    # material-icons
-    # grim
-    # grimblast
-    # slurp
-    # wlogout
-    # nwg-dock-hyprland
-    # nwg-look
-    # figlet
-    # gnused
-    # # vim
-    # xdg-user-dirs
-    # xdg-user-dirs-gtk
-    # brightnessctl
-    # playerctl
-    # jq
-    # polkit
-    # wl-clipboard
-    # # yay
-    # pacman
-    # killall
 
     # ml4w dependencies
     wget
@@ -147,9 +114,7 @@
     xdg-desktop-portal-hyprland
     libnotify
     kitty
-    # qt5-wayland
     libsForQt5.qt5ct
-    # qt6-wayland
     kdePackages.qt6ct
     fastfetch
     eza
@@ -158,12 +123,12 @@
     python313Packages.screeninfo
     xfce.tumbler
     brightnessctl
-    # nm-connection-editor
-    # network-manager-applet
+    wl-clipboard
     networkmanagerapplet
     imagemagick
     jq
     xclip
+    pinta
     kitty
     neovim
     htop

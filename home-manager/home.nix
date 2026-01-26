@@ -85,6 +85,7 @@ in
         synology-drive-client
         discord
         spotify
+        nextcloud-client
 
         # vscodium
 
@@ -132,6 +133,7 @@ in
         orca-slicer
         inkscape
         figma-linux
+        termius
 
         libreoffice-qt
         hunspell
@@ -145,14 +147,14 @@ in
         quickemu
 
         pdf4qt
-        zathura
+        # zathura
         kdePackages.kate
         kdePackages.okular
 
         syncthing
         vlc
         obs-studio
-        # ungoogled-chromium
+        ungoogled-chromium
         # floorp
         ladybird
         openfortivpn
@@ -185,6 +187,18 @@ in
         #   text = builtins.readFile "${pkgs.nix-search-tv.src}/nixpkgs.sh";
         # })
       ];
+
+      xdg.mimeApps = {
+        enable = true;
+        defaultApplications = {
+          "application/pdf" = "org.pwmt.zathura-pdf-mupdf.desktop";
+          "text/html" = "zen-beta.desktop";
+          "x-scheme-handler/http" = "zen-beta.desktop";
+          "x-scheme-handler/https" = "zen-beta.desktop";
+          "x-scheme-handler/about" = "zen-beta.desktop";
+          "x-scheme-handler/unknown" = "zen-beta.desktop";
+        };
+      };
 
       # Enable git
       programs.git = {
@@ -220,6 +234,7 @@ in
           # lazy-nvim
           telescope-nvim
           telescope-zoxide
+          vim-ghost
         ];
 
         # extraLuaConfig =
@@ -400,6 +415,10 @@ in
         '';
       };
 
+      services.remmina = {
+        enable = true;
+      };
+
       # programs.gemini-cli = {
       #   enable = true;
       #   package = pkgs.unstable.gemini-cli;
@@ -540,7 +559,6 @@ in
       services.nextcloud-client = {
         enable = true;
         startInBackground = true;
-        #hostName = "cloud.fsim-ev.de";
         package = pkgs.nextcloud-client;
       };
 
@@ -552,6 +570,7 @@ in
         portalPackage =
           inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
 
+        
         systemd.enable = false;
         systemd.variables = [ "--all" ];
 
@@ -599,6 +618,7 @@ in
       home.sessionVariables = {
         EDITOR = "nvim";
         XDG_RUNTIME_DIR = "/run/user/$UID";
+        # DEFAULT_BROWSER = "${pkgs.zen}/bin/qutebrowser";
       };
 
       # Let Home Manager install and manage itself.
