@@ -44,7 +44,13 @@ in
   users.users.schuasda.packages =
     # with pkgs;
     [
-    ] ++ config.deskenv.packages;
+    ]
+    ++ config.deskenv.packages;
+
+  programs.localsend = {
+    enable = true;
+    openFirewall = true;
+  };
 
   programs.bash = {
     interactiveShellInit = ''

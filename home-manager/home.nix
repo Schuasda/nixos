@@ -160,6 +160,7 @@ in
         openfortivpn
         qalculate-qt
         rquickshare
+        # localsend
         inputs.zen-browser.packages."${stdenv.hostPlatform.system}".default
 
         gemini-cli
@@ -475,8 +476,6 @@ in
         };
       };
 
-
-
       programs.nh = {
         enable = true;
         clean.enable = true;
@@ -497,6 +496,7 @@ in
         enable = true;
         shellAbbrs = {
           gs = "git status";
+          rgf = "rga-fzf";
         };
 
         shellInit = ''
@@ -570,7 +570,6 @@ in
         portalPackage =
           inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
 
-        
         systemd.enable = false;
         systemd.variables = [ "--all" ];
 
@@ -585,7 +584,17 @@ in
 
       xdg.portal.config.common.default = "*";
 
-      programs.tex-fmt.enable = true;
+      programs.tex-fmt = {
+        enable = true;
+        settings = {
+          wrap = true;
+          wraplen = 200;
+          wrap-chars = [
+            "."
+            ","
+          ];
+        };
+      };
 
       # Home Manager is pretty good at managing dotfiles. The primary way to manage
       # plain files is through 'home.file'.
