@@ -143,7 +143,7 @@ in
 
         #davinci-resolve
 
-        zotero
+        unstable.zotero
         quickemu
 
         pdf4qt
@@ -159,7 +159,7 @@ in
         ladybird
         openfortivpn
         qalculate-qt
-        rquickshare
+        unstable.rquickshare
         # localsend
         inputs.zen-browser.packages."${stdenv.hostPlatform.system}".default
 
@@ -418,6 +418,15 @@ in
 
       services.remmina = {
         enable = true;
+      };
+
+      programs.rclone = {
+        enable = true;
+        remotes = {
+          # gdrive = {
+
+          # };
+        };
       };
 
       # programs.gemini-cli = {
