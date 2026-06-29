@@ -61,8 +61,8 @@ in
         # '')
         keepassxc
         nixd
-        nomacs
-        doxygen_gui
+        # nomacs
+        # doxygen_gui
         glib
         gnome-control-center
         gnome.gvfs
@@ -109,6 +109,7 @@ in
         grc
         fusuma
         nixfmt-rfc-style
+        clipboard-jh
 
         zenith
         zenstates
@@ -146,9 +147,9 @@ in
         unstable.zotero
         quickemu
 
-        pdf4qt
+        # pdf4qt
         # zathura
-        kdePackages.kate
+        # kdePackages.kate
         kdePackages.okular
 
         syncthing
@@ -163,7 +164,7 @@ in
         # localsend
         inputs.zen-browser.packages."${stdenv.hostPlatform.system}".default
 
-        gemini-cli
+        unstable.gemini-cli
 
         prismlauncher
 
@@ -466,6 +467,13 @@ in
         enable = true;
       };
 
+      programs.oh-my-posh = {
+        enable = true;
+        enableFishIntegration = true;
+        enableBashIntegration = true;
+        configFile = ./ohmyposh/zen.toml;
+      };
+
       programs.zellij = {
         enable = true;
         enableFishIntegration = true;
@@ -488,6 +496,7 @@ in
       programs.nh = {
         enable = true;
         clean.enable = true;
+        clean.extraArgs = "--keep-since 7d --keep 5";
         flake = "/home/schuasda/nixos-conf";
       };
 
@@ -583,12 +592,16 @@ in
         systemd.variables = [ "--all" ];
 
         plugins = [
-          inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprexpo
-          inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprscrolling
+          # inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprexpo
+          # inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprscrolling
         ];
         extraConfig = ''
           ${builtins.readFile ./hyprland.conf}
         '';
+      };
+
+      services.hyprpolkitagent = {
+        enable = true;
       };
 
       xdg.portal.config.common.default = "*";

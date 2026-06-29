@@ -1,5 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
+  # imports = [
+  #   (inputs.nix-yazi-plugins.packages.${pkgs.stdenv.hostPlatform.system}.homeManagerModules.default)
+  # ];
   home-manager.users.schuasda = {
     programs.yazi = {
       enable = true;
@@ -7,11 +10,14 @@
       enableFishIntegration = true;
       shellWrapperName = "y";
       initLua = ./init.lua;
-      plugins = {
-        git = pkgs.yaziPlugins.git;
-        lazygit = pkgs.yaziPlugins.lazygit;
-        mount = pkgs.yaziPlugins.mount;
-        ouch = pkgs.yaziPlugins.ouch;
+      plugins = with pkgs; {
+        git = yaziPlugins.git;
+        lazygit = yaziPlugins.lazygit;
+        mount = yaziPlugins.mount;
+        ouch = yaziPlugins.ouch;
+        system-clipboard =
+          inputs.nix-yazi-plugins.packages.${pkgs.stdenv.hostPlatform.system}.system-clipboard;
+        # system-clipboard.enable = true;
       };
       settings = {
         opener = {
@@ -228,6 +234,13 @@
             ];
             run = "plugin gvfs -- jump-to-device";
             desc = "Select device then jump to its mount point";
+          }
+          {
+            on = [
+              "<C-y>"
+            ];
+            run = "plugin system-clipboard";
+            desc = "Copy selection to system clipboard";
           }
         ];
       };

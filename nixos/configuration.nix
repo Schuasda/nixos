@@ -11,9 +11,9 @@
     experimental-features = [ "nix-command flakes" ];
     trusted-users = [ "schuasda" ];
 
-    substituters = ["https://hyprland.cachix.org"];
-    trusted-substituters = ["https://hyprland.cachix.org"];
-    trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+    substituters = [ "https://hyprland.cachix.org" ];
+    trusted-substituters = [ "https://hyprland.cachix.org" ];
+    trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
   };
 
   imports = [
@@ -71,7 +71,10 @@
     };
   };
 
-  boot.kernelPackages = pkgs.linuxPackages_zen;
+  boot = {
+    kernelPackages = pkgs.linuxPackages_zen;
+    # kernelParams = [ "amdgpu.dcfeatures=0x2" ];
+  };
 
   services.logrotate.checkConfig = false;
 
@@ -247,7 +250,6 @@
   #   };
   # };
 
-
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
@@ -351,12 +353,12 @@
     ];
   };
 
-  # networking.wg-quick.interfaces.kicc = {
-  #   configFile = "/home/schuasda/kicc.conf";
+  networking.wg-quick.interfaces.Bachappen = {
+    configFile = "/home/schuasda/wireguard/Bachappen.conf";
 
-  #   autostart = false;
+    autostart = false;
 
-  # };
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

@@ -65,7 +65,7 @@
 
   programs.hyprlock = {
     enable = true;
-    package = inputs.hyprlock.packages.${pkgs.stdenv.hostPlatform.system}.hyprlock;
+    # package = inputs.hyprlock.packages.${pkgs.stdenv.hostPlatform.system}.hyprlock;
   };
 
   services.hypridle = {
@@ -76,7 +76,7 @@
   xdg.portal = {
     enable = true;
     extraPortals = [
-        pkgs.xdg-desktop-portal-termfilechooser
+      pkgs.xdg-desktop-portal-termfilechooser
     ];
   };
 
@@ -131,7 +131,7 @@
     pinta
     kitty
     neovim
-    htop
+    btop
     blueman
     grim
     slurp

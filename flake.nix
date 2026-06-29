@@ -24,13 +24,12 @@
     };
     hypridle = {
       url = "github:hyprwm/hypridle";
-      # inputs.hyprland.follows = "hyprland";
     };
     hyprlock = {
       url = "github:hyprwm/hyprlock";
-      # inputs.hyprland.follows = "hyprland";
     };
 
+    # Zen-Browser
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs = {
@@ -39,6 +38,12 @@
         nixpkgs.follows = "nixpkgs";
         home-manager.follows = "home-manager";
       };
+    };
+
+    # yazi plugins
+    nix-yazi-plugins = {
+      url = "github:lordkekz/nix-yazi-plugins";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # LazyVim
