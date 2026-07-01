@@ -81,7 +81,7 @@
   # Enable auto upgrade
   # system.autoUpgrade.enable = true;
 
-  virtualisation.docker.enable = true;
+  # virtualisation.docker.enable = true;
 
   # Enable garbage collection in the NixStore
   nix.gc = {
@@ -269,7 +269,7 @@
       "video"
       "gamemode"
       "wireshark"
-      "docker"
+      "container"
       "plugdev"
     ];
   };

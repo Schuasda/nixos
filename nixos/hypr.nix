@@ -82,7 +82,7 @@
 
   deskenv.packages = with pkgs; [
     hyprpaper
-    swww
+    awww
     # hyprgui
     waybar
     hyprpolkitagent
@@ -121,7 +121,7 @@
     python313Packages.pip
     python313Packages.pygobject3
     python313Packages.screeninfo
-    xfce.tumbler
+    tumbler
     brightnessctl
     wl-clipboard
     networkmanagerapplet

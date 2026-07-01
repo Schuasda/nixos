@@ -38,7 +38,8 @@ in
   ];
 
   nixpkgs.config.permittedInsecurePackages = [
-    "electron-32.3.3"
+    "electron-39.8.10"
+    "pnpm-10.29.2"
   ];
 
   users.users.schuasda.packages =
@@ -88,12 +89,11 @@ in
   };
 
   services.ollama = {
-    # enable = true;
-    acceleration = "rocm";
+    enable = false;
     loadModels = [ "deepseek-r1:8b" ];
   };
   services.open-webui = {
-    #enable = true;
+    enable = false;
     package = unstable.open-webui;
   };
 }
