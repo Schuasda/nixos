@@ -452,7 +452,7 @@ in
       };
 
       wayland.windowManager.hyprland = {
-        configType = "hyprlang";
+        configType = "lua";
         enable = true;
         # package = builtins.null;
         # portalPackage = builtins.null;
@@ -468,7 +468,7 @@ in
           # inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprscrolling
         ];
         extraConfig = ''
-          ${builtins.readFile ./hyprland.conf}
+          ${builtins.readFile ./hyprland.lua}
         '';
       };
 
