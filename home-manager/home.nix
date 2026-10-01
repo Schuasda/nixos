@@ -16,13 +16,13 @@ let
       inherit (mytex) latex-oth;
     }
   );
-  insecureNixPkg = import <nixos> {
-    config = {
-      permittedInsecurePackages = [
-        "electron-39.8.10"
-      ];
-    };
-  };
+  # insecureNixPkg = import <nixos> {
+  #   config = {
+  #     permittedInsecurePackages = [
+  #       "electron-39.8.10"
+  #     ];
+  #   };
+  # };
 in
 {
   # imports = [inputs.lazyvim.homeManagerModules.default];
@@ -137,7 +137,7 @@ in
         just
         gittyup
         insomnia
-        insecureNixPkg.bitwarden-desktop
+        bitwarden-desktop
         prusa-slicer
         orca-slicer
         inkscape
@@ -152,7 +152,7 @@ in
 
         #davinci-resolve
 
-        unstable.zotero
+        zotero
         quickemu
 
         # pdf4qt
@@ -165,14 +165,14 @@ in
         obs-studio
         ungoogled-chromium
         # floorp
-        ladybird
+        # ladybird
         openfortivpn
         qalculate-qt
         unstable.rquickshare
         # localsend
         inputs.zen-browser.packages."${stdenv.hostPlatform.system}".default
 
-        unstable.gemini-cli
+        # unstable.gemini-cli
 
         prismlauncher
 
@@ -389,9 +389,8 @@ in
           set fish_greeting # Disable greeting
         '';
         loginShellInit = ''
-          if [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" = 1 ]
-            # exec uwsm start -S hyprland-uwsm.desktop 
-            exec Hyprland
+          if [uwsm check may-start]
+            exec uwsm start hyprland.desktop 
           end
         '';
         interactiveShellInit = ''
@@ -440,7 +439,7 @@ in
 
       # Enable firefox
       programs.firefox = {
-        enable = true;
+        enable = false;
         configPath = "$HOME/mozilla/firefox";
       };
 

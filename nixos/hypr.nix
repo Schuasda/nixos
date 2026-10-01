@@ -14,19 +14,19 @@
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     portalPackage =
       inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
-    # withUWSM = true; # recommended for most users
+    withUWSM = true; # recommended for most users
     xwayland.enable = true; # Xwayland can be disabled.
   };
 
   programs.uwsm = {
-    enable = false;
-    waylandCompositors = {
-      hyprland = {
-        prettyName = "Hyprland";
-        comment = "Hyprland compositor managed by UWSM";
-        binPath = "/run/current-system/sw/bin/Hyprland";
-      };
-    };
+    # enable = true;
+    # waylandCompositors = {
+    #   hyprland = {
+    #     prettyName = "Hyprland";
+    #     comment = "Hyprland compositor managed by UWSM";
+    #     binPath = "/run/current-system/sw/bin/Hyprland";
+    #   };
+    # };
   };
 
   services.gnome = {
@@ -39,7 +39,9 @@
   security.pam.services = {
     # greetd.enableGnomeKeyring = true;
     # greetd-password.enableGnomeKeyring = true;
+    login.enable = true;
     login.enableGnomeKeyring = true;
+    login.fprintAuth = true;
   };
 
   services.dbus.packages = [
@@ -82,7 +84,6 @@
 
   deskenv.packages = with pkgs; [
     hyprpaper
-    awww
     # hyprgui
     waybar
     hyprpolkitagent
@@ -93,11 +94,13 @@
     rofi
     nautilus
     kdePackages.dolphin
-    nwg-displays
-
-    oh-my-posh
 
     # ml4w dependencies
+    quickshell
+    oh-my-posh
+    awww
+    pywal
+    kora-icon-theme
     wget
     unzip
     gum
@@ -114,7 +117,7 @@
     xdg-desktop-portal-hyprland
     libnotify
     kitty
-    libsForQt5.qt5ct
+    # libsForQt5.qt5ct
     kdePackages.qt6ct
     fastfetch
     eza
@@ -134,6 +137,7 @@
     btop
     blueman
     grim
+    grimblast
     slurp
     cliphist
     nwg-look
@@ -152,7 +156,6 @@
     gvfs
     wlogout
     waypaper
-    grimblast
     bibata-cursors
     font-awesome
     fira-sans

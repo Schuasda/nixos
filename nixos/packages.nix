@@ -14,6 +14,7 @@ in
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    # displaylink
     neovim
     zoxide
     wget
@@ -47,6 +48,10 @@ in
     [
     ]
     ++ config.deskenv.packages;
+
+  programs.firefox = {
+    enable = true;
+  };
 
   programs.localsend = {
     enable = true;

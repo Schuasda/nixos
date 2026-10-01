@@ -146,6 +146,12 @@
     enable = true;
   };
 
+  # Enable displaylink drivers
+  services.xserver.videoDrivers = [
+    "displaylink"
+    # "modesetting"
+  ];
+
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
 
