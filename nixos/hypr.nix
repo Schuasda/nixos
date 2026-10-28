@@ -19,14 +19,14 @@
   };
 
   programs.uwsm = {
-    # enable = true;
-    # waylandCompositors = {
-    #   hyprland = {
-    #     prettyName = "Hyprland";
-    #     comment = "Hyprland compositor managed by UWSM";
-    #     binPath = "/run/current-system/sw/bin/Hyprland";
-    #   };
-    # };
+    enable = true;
+    waylandCompositors = {
+      hyprland = {
+        prettyName = "Hyprland";
+        comment = "Hyprland compositor managed by UWSM";
+        binPath = "/run/current-system/sw/bin/Hyprland";
+      };
+    };
   };
 
   services.gnome = {
@@ -116,7 +116,6 @@
     xdg-desktop-portal-gtk
     xdg-desktop-portal-hyprland
     libnotify
-    kitty
     # libsForQt5.qt5ct
     kdePackages.qt6ct
     fastfetch
@@ -132,7 +131,6 @@
     jq
     xclip
     pinta
-    kitty
     neovim
     btop
     blueman
@@ -166,11 +164,12 @@
     power-profiles-daemon
     pywalfox-native
     vlc
-    material-icons
     colloid-icon-theme
   ];
 
   fonts.packages = with pkgs; [
     font-awesome
+    material-icons
+    material-symbols
   ];
 }

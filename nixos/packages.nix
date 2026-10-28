@@ -36,6 +36,8 @@ in
     mesa
     libGLU
     libsecret
+
+    wireguard-ui
   ];
 
   nixpkgs.config.permittedInsecurePackages = [

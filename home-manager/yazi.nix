@@ -17,13 +17,14 @@
         ouch = yaziPlugins.ouch;
         system-clipboard =
           inputs.nix-yazi-plugins.packages.${pkgs.stdenv.hostPlatform.system}.system-clipboard;
+        bunny = "${inputs.bunny-yazi}";
         # system-clipboard.enable = true;
       };
       settings = {
         opener = {
           edit = [
             {
-              run = "nvim \"$@\"";
+              run = "nvim %s";
               block = true;
             }
           ];
@@ -34,12 +35,12 @@
               for = "linux";
             }
             {
-              run = "zathura \"$@\"";
+              run = "zathura %s";
               orphan = true;
               desc = "Open with Zathura";
             }
             {
-              run = "okular \"$@\"";
+              run = "okular %s";
               orphan = true;
               desc = "Open with Okular";
             }
@@ -51,7 +52,7 @@
               for = "windows";
             }
             {
-              run = "ouch d -y \"$@\"";
+              run = "ouch d -y %s";
               desc = "Extract here with ouch";
               for = "unix";
             }
@@ -164,6 +165,37 @@
       };
       keymap = {
         mgr.prepend_keymap = [
+          {
+            on = "Z";
+            run = "plugin fzf";
+            desc = "Jump to a file/directory via fzf";
+          }
+          {
+            on = "z";
+            run = "plugin zoxide";
+            desc = "Jump to a directory via zoxide";
+          }
+          {
+            on = "<C-h>";
+            run = "tab_switch -1 --relative";
+            desc = "Switch to previous tab";
+          }
+          {
+            on = "<C-l>";
+            run = "tab_switch 1 --relative";
+            desc = "Switch to next tab";
+          }
+          # bunny (bookmarks)
+          {
+            on = "b";
+            run = "plugin bunny";
+            desc = "Start bunny.yazi";
+          }
+          {
+            on = "B";
+            run = "plugin bunny fuzzy";
+            desc = "Start bunny.yazi fuzzy search";
+          }
           {
             run = "plugin lazygit";
             on = [

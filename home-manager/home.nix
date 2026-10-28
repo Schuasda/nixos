@@ -167,12 +167,13 @@ in
         # floorp
         # ladybird
         openfortivpn
+        eduvpn-client
         qalculate-qt
         unstable.rquickshare
         # localsend
         inputs.zen-browser.packages."${stdenv.hostPlatform.system}".default
 
-        # unstable.gemini-cli
+        unstable.antigravity-cli
 
         prismlauncher
 
@@ -225,7 +226,6 @@ in
 
       programs.vscode = {
         # enable = true;
-        package = pkgs.unstable.vscodium-fhs;
       };
 
       programs.vscodium = {
@@ -334,7 +334,7 @@ in
       };
 
       programs.gitui = {
-        enable = true;
+        # enable = true;
       };
 
       programs.oh-my-posh = {
@@ -346,8 +346,9 @@ in
 
       programs.zellij = {
         enable = true;
-        enableFishIntegration = true;
+        enableFishIntegration = false;
         enableBashIntegration = true;
+        exitShellOnExit = true;
       };
 
       programs.ncspot = {
@@ -388,14 +389,28 @@ in
         shellInit = ''
           set fish_greeting # Disable greeting
         '';
+
         loginShellInit = ''
-          if [uwsm check may-start]
+          if test (tty) = "/dev/tty1"; and uwsm check may-start
             exec uwsm start hyprland.desktop 
           end
         '';
+
         interactiveShellInit = ''
           if [ "$TERM" = "xterm-kitty" ] 
             alias ssh="TERM=xterm-256color command ssh"
+          end
+
+          # Clear inherited ZELLIJ var if running in Wayland outside an active Zellij pane
+          if set -q WAYLAND_DISPLAY; and not set -q ZELLIJ_PANE
+            # set -e ZELLIJ
+          end
+
+          # Only trigger inside Kitty on a pseudo-terminal (/dev/pts/*)
+          if string match -q '/dev/pts/*' (tty)
+            and test "$TERM" = "xterm-kitty"
+            and not set -q ZELLIJ
+              zellij
           end
         '';
 
@@ -456,8 +471,8 @@ in
         # package = builtins.null;
         # portalPackage = builtins.null;
         package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-        portalPackage =
-          inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+        portalPackage = pkgs.xdg-desktop-portal-hyprland;
+        # inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
 
         systemd.enable = false;
         systemd.variables = [ "--all" ];
@@ -469,6 +484,48 @@ in
         extraConfig = ''
           ${builtins.readFile ./hyprland.lua}
         '';
+      };
+
+      services.hypridle = {
+        settings = {
+          general = {
+            # Use pidof to prevent duplicate processes
+            lock_cmd = "pidof hyprlock || hyprlock";
+            before_sleep_cmd = "loginctl lock-session";
+            after_sleep_cmd = "hyprctl dispatch dpms on";
+          };
+
+          listener = [
+            {
+              timeout = 480; # 8min.
+              on-timeout = "brightnessctl -s set 10"; # set monitor backlight to minimum, avoid 0 on OLED monitor.
+              on-resume = "brightnessctl -r"; # monitor backlight restore.
+            }
+
+            # turn off keyboard backlight, comment out this section if you dont have a keyboard backlight.
+            {
+              timeout = 480; # 8min.
+              on-timeout = "brightnessctl -sd rgb:kbd_backlight set 0"; # turn off keyboard backlight.
+              on-resume = "brightnessctl -rd rgb:kbd_backlight"; # turn on keyboard backlight.
+            }
+
+            {
+              timeout = 600; # 10min
+              on-timeout = "loginctl lock-session"; # lock screen when timeout has passed
+            }
+
+            {
+              timeout = 660; # 11min
+              on-timeout = "hyprctl dispatch 'hl.dsp.dpms({ action = 'disable' })'"; # screen off when timeout has passed
+              on-resume = "hyprctl dispatch 'hl.dsp.dpms({ action = 'enable' })' && brightnessctl -r"; # screen on when activity is detected after timeout has fired.
+            }
+
+            {
+              timeout = 1800; # 30min
+              on-timeout = "systemctl suspend"; # suspend pc
+            }
+          ];
+        };
       };
 
       services.hyprpolkitagent = {

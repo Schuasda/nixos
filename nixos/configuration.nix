@@ -120,20 +120,22 @@
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
-  networking.networkmanager.enable = true;
+  networking.networkmanager = {
+    enable = true;
+  };
 
   #  networking.nameservers = [ "1.1.1.1#one.one.one.one" "1.0.0.1#one.one.one.one" ];
   #
-  #  services.resolved = {
-  #    enable = true;
-  #    dnssec = "true";
-  #    domains = [ "~." ];
-  #    fallbackDns = [
-  #      "1.1.1.1#one.one.one.one"
-  #      "1.0.0.1#one.one.one.one"
-  #    ];
-  #    dnsovertls = "true";
-  #  };
+  services.resolved = {
+    enable = true;
+    #    dnssec = "true";
+    #    domains = [ "~." ];
+    #    fallbackDns = [
+    #      "1.1.1.1#one.one.one.one"
+    #      "1.0.0.1#one.one.one.one"
+    #    ];
+    #    dnsovertls = "true";
+  };
 
   # Enable bluetooth
   hardware.bluetooth = {
@@ -173,6 +175,7 @@
     LC_TIME = "de_DE.UTF-8";
   };
 
+  services.timesyncd.enable = true;
   # Enable Firmware Update through fwupd
   services.fwupd.enable = true;
 
@@ -267,6 +270,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.schuasda = {
     isNormalUser = true;
+    shell = pkgs.fish;
     description = "Simon Lehmair";
     extraGroups = [
       "wheel"
@@ -308,6 +312,14 @@
       	  MatchName=Framework Laptop 16 Keyboard Module - ANSI Keyboard
       	  AttrKeyboardIntegration=internal
       	'';
+
+    # Link ca-bundle to the standard path that pre-built OpenSSL/Python binaries expect
+    "ssl/cert.pem".source = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
+  };
+
+  # Ensure SSL_CERT_FILE is set across all user sessions
+  environment.sessionVariables = {
+    SSL_CERT_FILE = "/etc/ssl/certs/ca-bundle.crt";
   };
 
   environment.localBinInPath = true;
@@ -318,6 +330,7 @@
   };
 
   programs.nix-ld.enable = true;
+  programs.fish.enable = true;
 
   services.gvfs.enable = true;
 
@@ -344,6 +357,7 @@
   # networking.firewall.enable = false;
   networking.firewall = {
     enable = true;
+    checkReversePath = false;
     allowedUDPPorts = [ 51820 ]; # Clients and peers can use the same port, see listenport
     allowedTCPPortRanges = [
       {
@@ -359,11 +373,36 @@
     ];
   };
 
-  networking.wg-quick.interfaces.Bachappen = {
-    configFile = "/home/schuasda/wireguard/Bachappen.conf";
+  networking.wireguard = {
+    enable = true;
+    # interfaces.Bachappen = {
+    #   privateKeyFile = "/home/schuasda/wireguard/Fritz_Bachappen/private.key";
+    #   ips = [
+    #     "192.168.178.204/32"
+    #     "fde1:fd6a:5749::204/128"
+    #   ];
+    #   # dns = [
+    #   #   "192.168.178.50,192.168.178.1"
+    #   #   "fde1:fd6a:5749::50"
+    #   #   "fde1:fd6a:5749::ab6:57ff:fe7b:e418"
+    #   #   "fritz.box"
+    #   # ];
 
-    autostart = false;
-
+    #   peers = [
+    #     {
+    #       publicKey = "w1/GsYT45MGD5wcGVecDCJLaVzOMdU2cwKxSW52gaUA=";
+    #       presharedKeyFile = "/home/schuasda/wireguard/Fritz_Bachappen/preshared.key";
+    #       allowedIPs = [
+    #         "192.168.178.0/24"
+    #         "0.0.0.0/0"
+    #         "fde1:fd6a:5749::/64"
+    #         "::/0"
+    #       ];
+    #       endpoint = "i661wryc64ue2skr.myfritz.net:50644";
+    #       persistentKeepalive = 25;
+    #     }
+    #   ];
+    # };
   };
 
   # This value determines the NixOS release from which the default

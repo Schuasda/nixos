@@ -1,14 +1,21 @@
 function Linemode:mtime()
-	local time = math.floor(self._file.cha.mtime or 0)
-	if time == 0 then
-		return ""
-	elseif os.date("%Y", time) == os.date("%Y") then
-		return os.date("%d/%m %H:%M", time)
-	else
-		return os.date("%d/%m/%Y", time)
-	end
+  local time = math.floor(self._file.cha.mtime or 0)
+  if time == 0 then
+    return ""
+  elseif os.date("%Y", time) == os.date("%Y") then
+    return os.date("%d/%m %H:%M", time)
+  else
+    return os.date("%d/%m/%Y", time)
+  end
 end
+
+-- Zoxide plugin setup
+require("zoxide"):setup {
+  update_db = true,
+}
+
 require("git"):setup()
+require("bunny"):setup({ ... })
 
 require("gvfs"):setup({
   -- (Optional) Allowed keys to select device.

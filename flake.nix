@@ -46,6 +46,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # yazi plugin bunny
+    bunny-yazi = {
+      url = "github:stelcodes/bunny.yazi";
+      flake = false;
+    };
+
     # LazyVim
     # lazyvim.url = "github:pfassina/lazyvim-nix";
   };
