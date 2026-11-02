@@ -83,15 +83,10 @@
   };
 
   deskenv.packages = with pkgs; [
-    hyprpaper
-    # hyprgui
-    waybar
     hyprpolkitagent
     hyprls
 
     dunst
-    libnotify
-    rofi
     nautilus
     kdePackages.dolphin
 
@@ -100,13 +95,17 @@
     oh-my-posh
     awww
     pywal
+    matugen
+    hyprsunset
+    tesseract
     kora-icon-theme
     wget
+    curl
     unzip
     gum
     rsync
-    git
     figlet
+    loupe
     xdg-user-dirs
     hyprland
     hyprpaper
@@ -116,11 +115,11 @@
     xdg-desktop-portal-gtk
     xdg-desktop-portal-hyprland
     libnotify
-    # libsForQt5.qt5ct
-    kdePackages.qt6ct
+    inotify-tools
     fastfetch
     eza
     python313Packages.pip
+    pipx
     python313Packages.pygobject3
     python313Packages.screeninfo
     tumbler
@@ -143,6 +142,7 @@
     waybar
     rofi
     polkit_gnome
+    gnome-themes-extra
     zsh
     zsh-completions
     fzf
@@ -152,16 +152,11 @@
     flatpak
     swaynotificationcenter
     gvfs
+    udiskie
     wlogout
     waypaper
     bibata-cursors
-    font-awesome
-    fira-sans
-    fira-code
-    # firacode-nerd
-    nerd-fonts.fira-code
     nwg-dock-hyprland
-    power-profiles-daemon
     pywalfox-native
     vlc
     colloid-icon-theme
@@ -169,6 +164,12 @@
 
   fonts.packages = with pkgs; [
     font-awesome
+    fira-code
+    nerd-fonts.fira-code
+    fira-sans
+    nerd-fonts.jetbrains-mono
+    jetbrains-mono
+    noto-fonts-color-emoji
     material-icons
     material-symbols
   ];

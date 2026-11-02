@@ -158,7 +158,7 @@
   time.timeZone = "Europe/Berlin";
 
   # Use local time for RTC to fix windows time
-  time.hardwareClockInLocalTime = true;
+  # time.hardwareClockInLocalTime = true;
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_GB.UTF-8";
@@ -333,6 +333,7 @@
   programs.fish.enable = true;
 
   services.gvfs.enable = true;
+  services.udisks2.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
