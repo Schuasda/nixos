@@ -95,8 +95,6 @@ in
         spotify
         nextcloud-client
 
-        # vscodium
-
         devenv
         direnv
         uv
@@ -231,6 +229,7 @@ in
       programs.vscodium = {
         enable = true;
         package = pkgs.unstable.vscodium-fhs;
+        mutableExtensionsDir = true;
       };
 
       # programs.lazyvim.enable = true;
@@ -577,8 +576,13 @@ in
       home.sessionVariables = {
         EDITOR = "nvim";
         XDG_RUNTIME_DIR = "/run/user/$UID";
+        QML2_IMPORT_PATH = "${pkgs.kdePackages.qt5compat}/lib/qt-6/qml";
         # DEFAULT_BROWSER = "${pkgs.zen}/bin/qutebrowser";
       };
+
+      home.sessionPath = [
+        "$HOME/.local/bin"
+      ];
 
       # Let Home Manager install and manage itself.
       programs.home-manager.enable = true;

@@ -82,6 +82,12 @@
     ];
   };
 
+  services.upower.enable = true;
+
+  environment.sessionVariables = {
+    QML2_IMPORT_PATH = "${pkgs.kdePackages.qt5compat}/lib/qt-6/qml";
+  };
+
   deskenv.packages = with pkgs; [
     hyprpolkitagent
     hyprls
@@ -91,7 +97,9 @@
     kdePackages.dolphin
 
     # ml4w dependencies
+    killall
     quickshell
+    kdePackages.qt5compat
     oh-my-posh
     awww
     pywal
