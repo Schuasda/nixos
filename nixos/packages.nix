@@ -15,7 +15,7 @@ in
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     # displaylink
-    neovim
+    # neovim
     zoxide
     wget
     zip

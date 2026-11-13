@@ -53,7 +53,7 @@
     };
 
     # LazyVim
-    # lazyvim.url = "github:pfassina/lazyvim-nix";
+    lazyvim.url = "github:pfassina/lazyvim-nix";
   };
 
   outputs =
@@ -62,7 +62,7 @@
       nixpkgs,
       home-manager,
       nixos-hardware,
-      # lazyvim,
+      lazyvim,
       ...
     }@inputs:
     let

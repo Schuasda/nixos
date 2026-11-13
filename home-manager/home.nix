@@ -23,7 +23,6 @@ let
   # };
 in
 {
-  # imports = [inputs.lazyvim.homeManagerModules.default];
   imports = [
     ./yazi.nix
   ];
@@ -32,6 +31,9 @@ in
   home-manager = {
     backupFileExtension = "backup";
     users.schuasda = {
+      imports = [
+        inputs.lazyvim.homeManagerModules.default
+      ];
       # Home Manager needs a bit of information about you and the paths it should
       # manage.
       home.username = "schuasda";
@@ -73,6 +75,7 @@ in
         gnome-control-center
         gnome.gvfs
         ouch
+        exiftool
 
         (pkgs.symlinkJoin {
           name = "signal-desktop";
@@ -230,27 +233,47 @@ in
         mutableExtensionsDir = true;
       };
 
-      # programs.lazyvim.enable = true;
-
-      programs.neovim = {
+      programs.lazyvim = {
         enable = true;
-        withRuby = false;
-        withPython3 = false;
-        defaultEditor = true;
-        # extraPackages = with pkgs; [
-        #   lua-language-server
-        #   stylua
-        #   ripgrep
-        # ];
 
-        plugins = with pkgs.vimPlugins; [
-          # lazy-nvim
-          telescope-nvim
-          telescope-zoxide
-          vim-ghost
+        treesitterParsers = with pkgs.vimPlugins.nvim-treesitter-parsers; [
+          git_config
+          gitcommit
+          git_rebase
+          gitignore
+          gitattributes
+          nix
+          ninja
+          rst
+          bibtex
+          latex
+          vue
+          css
         ];
-
+        config.options = ''
+          vim.g.trouble_lualine = false
+        '';
       };
+
+      # programs.neovim = {
+      #   enable = true;
+      #   withRuby = false;
+      #   withPython3 = false;
+      #   defaultEditor = true;
+      #   # extraPackages = with pkgs; [
+      #   #   lua-language-server
+      #   #   stylua
+      #   #   ripgrep
+      #   # ];
+
+      #   plugins = with pkgs.vimPlugins; [
+      #     # lazy-nvim
+      #     telescope-nvim
+      #     telescope-zoxide
+      #     vim-ghost
+      #   ];
+
+      # };
 
       programs.kitty = {
         enable = true;
