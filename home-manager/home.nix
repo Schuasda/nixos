@@ -236,6 +236,38 @@ in
       programs.lazyvim = {
         enable = true;
 
+        extras = {
+          lang.git.enable = true;
+          lang.markdown = {
+            enable = true;
+            installDependencies = true;
+          };
+          lang.nix = {
+            enable = true;
+            installDependencies = true;
+          };
+          lang.python = {
+            enable = true;
+            installDependencies = true;
+            installRuntimeDependencies = true;
+          };
+          lang.tex = {
+            enable = true;
+            installDependencies = true;
+          };
+          lang.vue = {
+            enable = false;
+            installDependencies = true;
+            installRuntimeDependencies = true;
+          };
+          lang.yaml = {
+            enable = true;
+            installDependencies = true;
+          };
+        };
+
+        extraPackages = with pkgs; [ ];
+
         treesitterParsers = with pkgs.vimPlugins.nvim-treesitter-parsers; [
           git_config
           gitcommit
@@ -580,7 +612,6 @@ in
         #   org.gradle.daemon.idletimeout=3600000
         # '';
 
-        # ".local/share/texmf".source = ../Dokumente/OTH/Sonstiges/OTH_R_tex/texmf_OTHR;
       };
 
       # Home Manager can also manage your environment variables through
