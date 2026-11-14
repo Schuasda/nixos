@@ -24,7 +24,7 @@ let
 in
 {
   imports = [
-    ./yazi.nix
+    ./yazi/yazi.nix
   ];
 
   nixpkgs.overlays = [ outputs.overlays.unstable-packages ];
@@ -535,7 +535,7 @@ in
           # inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprscrolling
         ];
         extraConfig = ''
-          ${builtins.readFile ./hyprland.lua}
+          ${builtins.readFile ./hypr/hyprland.lua}
         '';
       };
 
