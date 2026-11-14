@@ -275,6 +275,19 @@
             run = "plugin system-clipboard";
             desc = "Copy selection to system clipboard";
           }
+          {
+            on = [
+              "g"
+              "t"
+            ];
+            run = "shell --orphan -- kitty";
+            desc = "Open new terminal in current directory";
+          }
+          {
+            on = "<C-t>";
+            run = "cd ~/.local/share/Trash/files";
+            desc = "Go to trash";
+          }
         ];
       };
     };
