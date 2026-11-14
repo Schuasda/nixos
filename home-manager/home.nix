@@ -136,6 +136,7 @@ in
         just
         gittyup
         insomnia
+        bruno
         bitwarden-desktop
         prusa-slicer
         orca-slicer
